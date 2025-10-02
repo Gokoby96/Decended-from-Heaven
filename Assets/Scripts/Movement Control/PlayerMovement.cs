@@ -1,0 +1,210 @@
+using System;
+using UnityEngine;
+using System.Collections;
+using System.Collections.Generic;
+
+public class PlayerMovement : MonoBehaviour
+{
+    // Bu script karakter kontrolü için yazılmıştır -96
+    [Header("Movement")] 
+    private float speed;
+    public float walkSpeed;
+    public float sprintspeed;
+    public float groundDrag;
+    
+    [Header("Slope Handling")]
+    public float maxslopeAngle;
+    private RaycastHit slopeHit;
+    private bool exitingSlope;
+    
+    
+// Hava kontrolü için lazım olan değerler
+    [Header("Ground Check")]
+    public float playerheight;
+    public LayerMask WhatIsGround;
+    bool isGrounded;
+    
+    [Header("Keybinds")]
+    public KeyCode jump = KeyCode.Space;
+    public KeyCode sprintKey = KeyCode.LeftShift;
+    public KeyCode crouchKey = KeyCode.LeftControl;
+    
+    
+    public Transform oriantation;
+    //bu ise playerın movement stateini tutucak 
+    public MovementState state;
+  // Movement stateleri enum listesinde tutuyoruz 
+    public enum MovementState
+    {
+        walking,
+        sprinting,
+        crouching,
+        air
+    }
+[Header("Crouching")]
+public float crouchYScale;
+public float crouchSpeed;
+private float startYscale;
+
+
+    float horizontalınput;
+    
+    private float verticalınput;
+    
+    Vector3 movement;
+    
+    private Rigidbody rb;
+    
+public float jumpForce;
+public float jumpCooldown;
+public float Airmultiplier;
+
+bool ReadyToJump;
+    private void Start()
+    {
+        ReadyToJump = true;
+        // rigidbody eşleyip rotation durdurduk
+        rb = GetComponent<Rigidbody>();
+        rb.freezeRotation = true;
+        startYscale = transform.localScale.y;
+    }
+
+    private void Update()
+    {
+        // player yerde mi?
+        isGrounded =Physics.Raycast(transform.position, Vector3.down, playerheight* 0.5f + 0.2f, WhatIsGround);
+        Input();
+        StateHandler();
+        SpeedControl();
+        // sürükleme
+        if (isGrounded)
+        {
+            rb.linearDamping = groundDrag;
+        }
+    }
+
+    private void FixedUpdate()
+    {
+        MovePlayer();
+    }
+
+    private void Input()
+    {
+        // ınput alınan yer
+        horizontalınput = UnityEngine.Input.GetAxis("Horizontal");
+        verticalınput = UnityEngine.Input.GetAxis("Vertical");
+        if (UnityEngine.Input.GetKey(jump)&& ReadyToJump&& isGrounded)
+        {
+            ReadyToJump = false;
+            Jump();
+            Invoke(nameof(ResetJump), jumpCooldown);
+        }
+        // crouching işlemi
+        if (UnityEngine.Input.GetKeyDown(crouchKey))
+        {
+            transform.localScale = new Vector3(transform.localScale.x ,crouchYScale , transform.localScale.z);
+            rb.AddForce(Vector3.down* 5f, ForceMode.Impulse);
+        }
+
+        if (UnityEngine.Input.GetKeyUp(crouchKey))
+        {
+            transform.localScale = new Vector3(transform.localScale.x ,startYscale , transform.localScale.z);
+        }
+    }
+// bu fonksiyon player statelerini tutup hızını ayarlamamıza yarayacak
+    private void StateHandler()
+    {
+        //crouching state inde ise
+        if (UnityEngine.Input.GetKeyDown(crouchKey))
+        {
+            state = MovementState.crouching;
+            speed = crouchSpeed;
+        }
+        // sprint te ise
+        if (isGrounded&& UnityEngine.Input.GetKey(sprintKey))
+        {
+            state = MovementState.sprinting;
+            speed = sprintspeed;
+        }
+        // Walking state de ise
+        else if (isGrounded)
+        {
+            state = MovementState.walking;
+            speed = walkSpeed;
+        }
+        // air stateinde ise
+        else
+        {
+            state = MovementState.air;
+        }
+    }
+    private void MovePlayer()
+    {
+       
+        movement = oriantation.forward * verticalınput + oriantation.right * horizontalınput;
+        if (OnSlope()&& !exitingSlope)
+        {
+            rb.AddForce(GetSlopeMoveDirection()*speed*20f, ForceMode.Force);
+            rb.AddForce(Vector3.down*80f ,ForceMode.Force);
+            
+        }
+        if (isGrounded)
+        {
+            rb.AddForce(movement.normalized*speed* 10f, ForceMode.Force);
+        }
+        else if (!isGrounded)
+        {
+            rb.AddForce(movement.normalized*speed* 10f* Airmultiplier, ForceMode.Force);
+        }
+
+        rb.useGravity = !OnSlope();
+
+
+    }
+
+    private void SpeedControl()
+    {
+        if (OnSlope()&& !exitingSlope)
+        {
+            if (rb.linearVelocity.magnitude> speed)
+            {
+                rb.linearVelocity = rb.linearVelocity.normalized * speed;
+            }
+        }
+        Vector3 flatvel=  new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
+        if (flatvel.magnitude > speed)
+        {
+            Vector3 limitedvel = flatvel.normalized * speed;
+            rb.linearVelocity = new Vector3(limitedvel.x, rb.linearVelocity.y, limitedvel.z);
+        }
+    }
+
+    private void Jump()
+    {
+        exitingSlope = true; 
+        rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
+        
+        rb.AddForce(transform.up * jumpForce, ForceMode.Impulse);
+    }
+
+    private void ResetJump()
+    {
+        ReadyToJump = true;
+        exitingSlope = false;
+    }
+
+    private bool OnSlope()
+    {
+        if (Physics.Raycast(transform.position, Vector3.down, out slopeHit, playerheight * 0.5f + 0.3f))
+        {
+            float angle = Vector3.Angle(Vector3.up, slopeHit.normal);
+            return angle < maxslopeAngle;
+        }
+        return false;
+    }
+
+    private Vector3 GetSlopeMoveDirection()
+    {
+        return Vector3.ProjectOnPlane(movement, slopeHit.normal).normalized;
+    }
+}
