@@ -877,7 +877,7 @@ MonoBehaviour:
   crouchKey: 306
   oriantation: {fileID: 944796479}
   state: 0
-  crouchYScale: 0
+  crouchYScale: 0.5
   crouchSpeed: 0
   jumpForce: 12
   jumpCooldown: 0.25

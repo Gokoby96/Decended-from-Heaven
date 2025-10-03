@@ -10,14 +10,23 @@ public class PlayerMovement : MonoBehaviour
     private float speed;
     public float walkSpeed;
     public float sprintspeed;
-    public float groundDrag;
+    public float slideSpeed;
+    
+    
+    private float desiredMoveSpeed;
+    private float lastDesiredMoveSpeed;
+
+
+    public float speedIncreaseMultıplier;
+    public float slopeIncreaseMultiplier;
+    
     
     [Header("Slope Handling")]
     public float maxslopeAngle;
     private RaycastHit slopeHit;
     private bool exitingSlope;
     
-    
+    public float groundDrag;
 // Hava kontrolü için lazım olan değerler
     [Header("Ground Check")]
     public float playerheight;
@@ -39,8 +48,12 @@ public class PlayerMovement : MonoBehaviour
         walking,
         sprinting,
         crouching,
+        sliding,
         air
     }
+
+    public bool sliding;
+    
 [Header("Crouching")]
 public float crouchYScale;
 public float crouchSpeed;
@@ -103,7 +116,7 @@ bool ReadyToJump;
         if (UnityEngine.Input.GetKeyDown(crouchKey))
         {
             transform.localScale = new Vector3(transform.localScale.x ,crouchYScale , transform.localScale.z);
-            rb.AddForce(Vector3.down* 5f, ForceMode.Impulse);
+            rb.AddForce(Vector3.down* 80f, ForceMode.Impulse);
         }
 
         if (UnityEngine.Input.GetKeyUp(crouchKey))
@@ -114,8 +127,23 @@ bool ReadyToJump;
 // bu fonksiyon player statelerini tutup hızını ayarlamamıza yarayacak
     private void StateHandler()
     {
+        // slide state inde 
+        if (sliding)
+        {
+            state = MovementState.sliding;
+
+            if (OnSlope() && rb.linearVelocity.y < 0.1f)
+            {
+                desiredMoveSpeed = slideSpeed;
+                
+            }
+            else
+            {
+                desiredMoveSpeed = walkSpeed;
+            }
+        }
         //crouching state inde ise
-        if (UnityEngine.Input.GetKeyDown(crouchKey))
+        else if (UnityEngine.Input.GetKeyDown(crouchKey))
         {
             state = MovementState.crouching;
             speed = crouchSpeed;
@@ -137,6 +165,38 @@ bool ReadyToJump;
         {
             state = MovementState.air;
         }
+
+        if (Mathf.Abs(desiredMoveSpeed- lastDesiredMoveSpeed) > 4f && speed !=0)
+        {
+            StopAllCoroutines();
+            StartCoroutine(SmoothlyMoveSpeed());
+        }
+
+        lastDesiredMoveSpeed = desiredMoveSpeed;
+    }
+
+    private IEnumerator SmoothlyMoveSpeed()
+    {
+        float time = 0;
+        float difference = Mathf.Abs(desiredMoveSpeed - speed);
+        float startValue = speed;
+
+        while (time < difference)
+        {
+            speed = Mathf.Lerp(startValue, desiredMoveSpeed, time / difference);
+            if (OnSlope())
+            {
+                float slopeAngle = Vector3.Angle(Vector3.up, slopeHit.normal);
+                float slopeAngleIncrease = 1 + (slopeAngle / 90f);
+                time += Time.deltaTime* speedIncreaseMultıplier*slopeIncreaseMultiplier*slopeAngleIncrease;
+            }
+            else
+            {
+                time += Time.deltaTime * speedIncreaseMultıplier;
+            }
+            
+            yield return null;
+        }
     }
     private void MovePlayer()
     {
@@ -144,7 +204,7 @@ bool ReadyToJump;
         movement = oriantation.forward * verticalınput + oriantation.right * horizontalınput;
         if (OnSlope()&& !exitingSlope)
         {
-            rb.AddForce(GetSlopeMoveDirection()*speed*20f, ForceMode.Force);
+            rb.AddForce(GetSlopeMoveDirection(movement)*speed*20f, ForceMode.Force);
             rb.AddForce(Vector3.down*80f ,ForceMode.Force);
             
         }
@@ -193,7 +253,7 @@ bool ReadyToJump;
         exitingSlope = false;
     }
 
-    private bool OnSlope()
+public  bool OnSlope()
     {
         if (Physics.Raycast(transform.position, Vector3.down, out slopeHit, playerheight * 0.5f + 0.3f))
         {
@@ -203,8 +263,8 @@ bool ReadyToJump;
         return false;
     }
 
-    private Vector3 GetSlopeMoveDirection()
+  public Vector3 GetSlopeMoveDirection(Vector3 direction)
     {
-        return Vector3.ProjectOnPlane(movement, slopeHit.normal).normalized;
+        return Vector3.ProjectOnPlane(direction, slopeHit.normal).normalized;
     }
 }
