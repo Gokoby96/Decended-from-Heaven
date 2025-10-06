@@ -2,6 +2,7 @@ using System;
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.Rendering.UI;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -11,6 +12,7 @@ public class PlayerMovement : MonoBehaviour
     public float walkSpeed;
     public float sprintspeed;
     public float slideSpeed;
+    public float wallRunSpeed;
     
     
     private float desiredMoveSpeed;
@@ -48,11 +50,13 @@ public class PlayerMovement : MonoBehaviour
         walking,
         sprinting,
         crouching,
+        wallRunning,
         sliding,
         air
     }
 
     public bool sliding;
+    public bool wallrunning;
     
 [Header("Crouching")]
 public float crouchYScale;
@@ -127,6 +131,11 @@ bool ReadyToJump;
 // bu fonksiyon player statelerini tutup hızını ayarlamamıza yarayacak
     private void StateHandler()
     {
+        if (wallrunning)
+        {
+            state = MovementState.wallRunning;
+            desiredMoveSpeed = wallRunSpeed;
+        }
         // slide state inde 
         if (sliding)
         {
@@ -139,7 +148,7 @@ bool ReadyToJump;
             }
             else
             {
-                desiredMoveSpeed = walkSpeed;
+                desiredMoveSpeed = sprintspeed;
             }
         }
         //crouching state inde ise
