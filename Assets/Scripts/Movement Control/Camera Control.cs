@@ -16,6 +16,7 @@ public class CameraControl : MonoBehaviour
     [Header("Camera Tilt Settings")] // Kameranın smooth bir şekilde sağa yada sola yatmasını sağlamak için değerler
     public float tiltAmount ;      
     public float tiltSpeed ;
+    public float tiltBoostAmount;
     
     [Header("FOV Settings")]
     public Camera playerCam;
@@ -27,6 +28,9 @@ public class CameraControl : MonoBehaviour
     
     float currentTilt;                 
     float targetTilt;   
+    
+    private float horizontalInput;
+    private float verticalInput;
 
     private void Start()
     {
@@ -45,13 +49,27 @@ public class CameraControl : MonoBehaviour
         float mouseX = Input.GetAxis("Mouse X")*Time.deltaTime * Sensx;
         float mouseY = Input.GetAxis("Mouse Y")*Time.deltaTime * Sensy;
         
+        
+        
+        
         yRotation += mouseX;
         xRotation -= mouseY;
         xRotation = Mathf.Clamp(xRotation, -90f, 90f);
+        verticalInput = Input.GetAxisRaw("Vertical");
         float horizontalInput = Input.GetAxisRaw("Horizontal");
-        if (horizontalInput > 0) targetTilt = -tiltAmount;  
-        else if (horizontalInput < 0) targetTilt = tiltAmount; 
-        else targetTilt = 0; // tuş yok -> düz
+        
+        float tiltBoost = 1f;
+
+// Eğer sprint yapıyorsak tilt biraz daha güçlü olsun
+        if (playerMovement.state == PlayerMovement.MovementState.sprinting && verticalInput == 0)
+        {
+            tiltBoost = tiltBoostAmount; // sağa sola sprintte eğim artışı
+        }
+
+        if (horizontalInput > 0) targetTilt = -tiltAmount * tiltBoost;
+        else if (horizontalInput < 0) targetTilt = tiltAmount * tiltBoost;
+        else targetTilt = 0;
+       
 
         // Smooth geçişin yapıldığı yer
         currentTilt = Mathf.Lerp(currentTilt, targetTilt, Time.deltaTime * tiltSpeed);
@@ -61,9 +79,17 @@ public class CameraControl : MonoBehaviour
         transform.rotation = Quaternion.Euler(xRotation, yRotation, currentTilt);
         orientaion.rotation = Quaternion.Euler(0, yRotation, 0);
         
-        float targetFOV = (playerMovement.state == PlayerMovement.MovementState.sprinting) 
-            ? sprintFOV 
-            : normalFOV;
+        float targetFOV;
+
+// Eğer sprint atıyorsa ve ileri gidiyorsa FOV büyür
+        if (playerMovement.state == PlayerMovement.MovementState.sprinting && verticalInput > 0)
+        {
+            targetFOV = sprintFOV;
+        }
+        else
+        {
+            targetFOV = normalFOV;
+        }
 
         playerCam.fieldOfView = Mathf.Lerp(playerCam.fieldOfView, targetFOV, fovLerpSpeed * Time.deltaTime);
     }

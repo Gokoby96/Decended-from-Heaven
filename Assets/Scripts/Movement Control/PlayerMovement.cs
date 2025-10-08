@@ -147,6 +147,7 @@ bool ReadyToJump;
 // bu fonksiyon player statelerini tutup hızını ayarlamamıza yarayacak
     private void StateHandler()
     {
+        // wallrun state inde 
         if (wallrunning)
         {
             state = MovementState.wallRunning;
@@ -174,7 +175,7 @@ bool ReadyToJump;
             speed = crouchSpeed;
         }
         // sprint te ise
-        if (isGrounded&& UnityEngine.Input.GetKey(sprintKey))
+        if (isGrounded&& UnityEngine.Input.GetKey(sprintKey)&& verticalınput >=0 )
         {
             state = MovementState.sprinting;
             speed = sprintspeed;
