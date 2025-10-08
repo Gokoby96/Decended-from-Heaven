@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class WallRunning : MonoBehaviour
 {
+    public bool wallrunning;
     [Header("Wall Running")]
     public LayerMask whatIsWall;
     public LayerMask whatIsGround;
@@ -14,10 +15,10 @@ public class WallRunning : MonoBehaviour
 [Header("Detection")]
 public float wallCheckDistance;
 public float minJumpHeight;
-private RaycastHit leftWallhit;
-private RaycastHit rightWallhit;
-private bool wallLeft;
-private bool wallRight;
+public RaycastHit leftWallhit;
+public RaycastHit rightWallhit;
+public bool wallLeft;
+public bool wallRight;
 
 [Header("References")]
 public Transform orientation;
@@ -125,4 +126,5 @@ private void StopWallRun()
 {
     pm.wallrunning = false;
 }
+
 }

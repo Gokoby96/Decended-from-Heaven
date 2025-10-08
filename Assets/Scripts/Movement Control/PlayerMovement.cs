@@ -110,10 +110,26 @@ bool ReadyToJump;
         // ınput alınan yer
         horizontalınput = UnityEngine.Input.GetAxis("Horizontal");
         verticalınput = UnityEngine.Input.GetAxis("Vertical");
-        if (UnityEngine.Input.GetKey(jump)&& ReadyToJump&& isGrounded)
+        if (UnityEngine.Input.GetKeyDown(jump)&& ReadyToJump&& (isGrounded|| wallrunning))
         {
             ReadyToJump = false;
-            Jump();
+            if (wallrunning)
+            {
+                // WallRunning scriptinden wall normalini al
+                WallRunning wr = GetComponent<WallRunning>();
+                Vector3 wallNormal = wr.wallRight ? wr.rightWallhit.normal : wr.leftWallhit.normal;
+
+                // WallJump fonksiyonunu çağır
+                WallJump(wallNormal);
+
+                // Wallrun durdur
+                wallrunning = false;
+            }
+            else
+            {
+                Jump();
+            }
+
             Invoke(nameof(ResetJump), jumpCooldown);
         }
         // crouching işlemi
@@ -180,7 +196,7 @@ bool ReadyToJump;
             StopAllCoroutines();
             StartCoroutine(SmoothlyMoveSpeed());
         }
-
+       
         lastDesiredMoveSpeed = desiredMoveSpeed;
     }
 
@@ -206,6 +222,8 @@ bool ReadyToJump;
             
             yield return null;
         }
+
+        speed = desiredMoveSpeed;
     }
     private void MovePlayer()
     {
@@ -276,4 +294,14 @@ public  bool OnSlope()
     {
         return Vector3.ProjectOnPlane(direction, slopeHit.normal).normalized;
     }
+    public void WallJump(Vector3 wallNormal)
+    {
+        exitingSlope = true; 
+        rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
+
+        // Yukarı ve duvardan uzaklaşma yönü
+        Vector3 jumpDirection = transform.up + wallNormal;
+        rb.AddForce(jumpDirection.normalized * jumpForce, ForceMode.Impulse);
+    }
+
 }
