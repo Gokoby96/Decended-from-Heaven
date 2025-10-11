@@ -110,7 +110,7 @@ bool ReadyToJump;
         // ınput alınan yer
         horizontalınput = UnityEngine.Input.GetAxis("Horizontal");
         verticalınput = UnityEngine.Input.GetAxis("Vertical");
-        if (UnityEngine.Input.GetKeyDown(jump)&& ReadyToJump&& (isGrounded|| wallrunning))
+        if (UnityEngine.Input.GetKeyDown(jump)&& ReadyToJump&& isGrounded)
         {
             ReadyToJump = false;
             if (wallrunning)

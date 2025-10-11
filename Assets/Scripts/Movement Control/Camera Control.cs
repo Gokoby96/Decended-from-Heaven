@@ -23,14 +23,21 @@ public class CameraControl : MonoBehaviour
     public float normalFOV = 60f;
     public float sprintFOV = 75f;
     public float fovLerpSpeed = 8f;
-
+    
+    [Header("Wallrun Camera Tilt")]
+    public float wallrunTiltAmount ;   // Duvara paralel eğim
+    public float wallrunTiltSpeed  ; 
+  
     private PlayerMovement playerMovement;
+    private WallRunning wallRunning;
     
     float currentTilt;                 
     float targetTilt;   
     
     private float horizontalInput;
     private float verticalInput;
+    
+  
 
     private void Start()
     {
@@ -41,6 +48,8 @@ public class CameraControl : MonoBehaviour
             playerCam = GetComponent<Camera>();
 
         playerMovement = FindObjectOfType<PlayerMovement>();
+        wallRunning = FindObjectOfType<WallRunning>();
+    
     }
 
     private void Update()
@@ -65,10 +74,20 @@ public class CameraControl : MonoBehaviour
         {
             tiltBoost = tiltBoostAmount; // sağa sola sprintte eğim artışı
         }
+        if (playerMovement.wallrunning)
+        {
+            if (wallRunning.wallLeft) targetTilt = -wallrunTiltAmount;
+            else if (wallRunning.wallRight) targetTilt = wallrunTiltAmount;
+           
+        }
+        else
+        {
+            if (horizontalInput > 0) targetTilt = -tiltAmount * tiltBoost;
+            else if (horizontalInput < 0) targetTilt = tiltAmount * tiltBoost;
+            else targetTilt = 0;
+        }
 
-        if (horizontalInput > 0) targetTilt = -tiltAmount * tiltBoost;
-        else if (horizontalInput < 0) targetTilt = tiltAmount * tiltBoost;
-        else targetTilt = 0;
+       
        
 
         // Smooth geçişin yapıldığı yer
@@ -86,6 +105,7 @@ public class CameraControl : MonoBehaviour
         {
             targetFOV = sprintFOV;
         }
+        
         else
         {
             targetFOV = normalFOV;
@@ -93,4 +113,5 @@ public class CameraControl : MonoBehaviour
 
         playerCam.fieldOfView = Mathf.Lerp(playerCam.fieldOfView, targetFOV, fovLerpSpeed * Time.deltaTime);
     }
+   
 }

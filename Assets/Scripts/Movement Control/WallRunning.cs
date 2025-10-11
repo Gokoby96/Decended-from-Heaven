@@ -33,6 +33,11 @@ private float horizontalInput;
 private float verticalInput;
 public float wallClimbSpeed;
 
+[Header("Wall Jump Settings")]
+public KeyCode wallJumpKey = KeyCode.Space;
+public float wallJumpUpForce ;
+public float wallJumpSideForce ;
+
 private void Start()
 {
     rb = GetComponent<Rigidbody>();
@@ -44,7 +49,18 @@ private void Update()
 {
     CheckForWall();
     StateMachine();
+    
+    Wallruncheck();
 }
+
+private void Wallruncheck()
+{
+    if (pm.wallrunning && Input.GetKeyDown(wallJumpKey))
+    {
+        WallJump();
+    }
+}
+
 private void FixedUpdate()
 {
     if (pm.wallrunning)
@@ -125,6 +141,41 @@ private void WallRunningMovement()
 private void StopWallRun()
 {
     pm.wallrunning = false;
+}
+private void WallJump()
+{
+    Vector3 wallNormal = wallRight ? rightWallhit.normal : leftWallhit.normal;
+
+    
+    Vector3 wallForward = Vector3.Cross(wallNormal, Vector3.up);
+    if ((orientation.forward - wallForward).magnitude > (orientation.forward + wallForward).magnitude)
+        wallForward = -wallForward;
+
+    
+    Vector3 jumpDirection =
+        (orientation.forward * 0.8f) +     
+        (wallNormal * 0.4f) +              
+        (Vector3.up * 0.6f);               
+
+    jumpDirection.Normalize();
+
+   
+    Vector3 preservedVelocity = rb.linearVelocity * 0.5f;
+    rb.linearVelocity = Vector3.zero;
+
+    
+    float jumpForce = wallJumpSideForce; 
+    rb.AddForce((jumpDirection * jumpForce) + preservedVelocity, ForceMode.Impulse);
+
+    StopWallRun();
+
+   
+    Invoke(nameof(ResetWallRunCooldown), 0.2f);
+}
+
+private void ResetWallRunCooldown()
+{
+    wallrunning = false;
 }
 
 }
