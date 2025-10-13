@@ -113,5 +113,7 @@ public class CameraControl : MonoBehaviour
 
         playerCam.fieldOfView = Mathf.Lerp(playerCam.fieldOfView, targetFOV, fovLerpSpeed * Time.deltaTime);
     }
+
+   
    
 }

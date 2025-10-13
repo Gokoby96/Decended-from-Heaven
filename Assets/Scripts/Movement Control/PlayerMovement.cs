@@ -13,10 +13,15 @@ public class PlayerMovement : MonoBehaviour
     public float sprintspeed;
     public float slideSpeed;
     public float wallRunSpeed;
+    public float dashSpeed;
+    public float dashSpeedChangeFactor;
+    public float maxYSpeed;
     
     
     private float desiredMoveSpeed;
     private float lastDesiredMoveSpeed;
+    private MovementState lastState;
+    private bool keepMomentum;
 
 
     public float speedIncreaseMultıplier;
@@ -51,10 +56,12 @@ public class PlayerMovement : MonoBehaviour
         sprinting,
         crouching,
         wallRunning,
+        dashing,
         sliding,
         air
     }
 
+    public bool dashing;
     public bool sliding;
     public bool wallrunning;
     
@@ -94,9 +101,13 @@ bool ReadyToJump;
         StateHandler();
         SpeedControl();
         // sürükleme
-        if (isGrounded)
+        if (state == MovementState.walking || state == MovementState.sprinting || state == MovementState.crouching)
         {
             rb.linearDamping = groundDrag;
+        }
+        else
+        {
+            rb.linearDamping = 0;
         }
     }
 
@@ -147,14 +158,22 @@ bool ReadyToJump;
 // bu fonksiyon player statelerini tutup hızını ayarlamamıza yarayacak
     private void StateHandler()
     {
+        // dashing State
+        if (dashing)
+        {
+            state = MovementState.dashing;
+            desiredMoveSpeed = dashSpeed;
+            speedChangeFactor = dashSpeedChangeFactor;
+        }
+        
         // wallrun state inde 
-        if (wallrunning)
+       else  if (wallrunning)
         {
             state = MovementState.wallRunning;
             desiredMoveSpeed = wallRunSpeed;
         }
         // slide state inde 
-        if (sliding)
+       else if (sliding)
         {
             state = MovementState.sliding;
 
@@ -172,63 +191,89 @@ bool ReadyToJump;
         else if (UnityEngine.Input.GetKeyDown(crouchKey))
         {
             state = MovementState.crouching;
-            speed = crouchSpeed;
+            desiredMoveSpeed = crouchSpeed;
         }
         // sprint te ise
-        if (isGrounded&& UnityEngine.Input.GetKey(sprintKey)&& verticalınput >=0 )
+       else  if (isGrounded&& UnityEngine.Input.GetKey(sprintKey)&& verticalınput >=0 )
         {
             state = MovementState.sprinting;
-            speed = sprintspeed;
+            desiredMoveSpeed = sprintspeed;
         }
         // Walking state de ise
         else if (isGrounded)
         {
             state = MovementState.walking;
-            speed = walkSpeed;
+            desiredMoveSpeed = walkSpeed;
         }
         // air stateinde ise
         else
         {
             state = MovementState.air;
+            if (desiredMoveSpeed < sprintspeed)
+            {
+                desiredMoveSpeed = walkSpeed;
+                
+            }
+            else
+            {
+                desiredMoveSpeed = sprintspeed;
+            }
+        }
+        bool desiredMoveSpeedHasChanged = desiredMoveSpeed != lastDesiredMoveSpeed;
+        if (lastState == MovementState.dashing)
+        {
+            keepMomentum = true;
         }
 
-        if (Mathf.Abs(desiredMoveSpeed- lastDesiredMoveSpeed) > 4f && speed !=0)
+        if (desiredMoveSpeedHasChanged)
         {
-            StopAllCoroutines();
-            StartCoroutine(SmoothlyMoveSpeed());
+            if (keepMomentum)
+            {
+                StopAllCoroutines();
+                StartCoroutine(SmoothlyLerpMoveSpeed());
+            }
+            else
+            {
+                StopAllCoroutines();
+                speed = desiredMoveSpeed;
+            }
         }
-       
         lastDesiredMoveSpeed = desiredMoveSpeed;
+        lastState = state;
+
+        
     }
 
-    private IEnumerator SmoothlyMoveSpeed()
+    private float speedChangeFactor;
+
+    private IEnumerator SmoothlyLerpMoveSpeed()
     {
+      
         float time = 0;
         float difference = Mathf.Abs(desiredMoveSpeed - speed);
         float startValue = speed;
 
+        float boostFactor = speedChangeFactor;
+
         while (time < difference)
         {
             speed = Mathf.Lerp(startValue, desiredMoveSpeed, time / difference);
-            if (OnSlope())
-            {
-                float slopeAngle = Vector3.Angle(Vector3.up, slopeHit.normal);
-                float slopeAngleIncrease = 1 + (slopeAngle / 90f);
-                time += Time.deltaTime* speedIncreaseMultıplier*slopeIncreaseMultiplier*slopeAngleIncrease;
-            }
-            else
-            {
-                time += Time.deltaTime * speedIncreaseMultıplier;
-            }
-            
+
+            time += Time.deltaTime * boostFactor;
+
             yield return null;
         }
 
-        speed = desiredMoveSpeed;
+       speed = desiredMoveSpeed;
+        speedChangeFactor = 1f;
+        keepMomentum = false;
     }
     private void MovePlayer()
     {
-       
+        if (state == MovementState.dashing)
+        {
+            return;
+        }
         movement = oriantation.forward * verticalınput + oriantation.right * horizontalınput;
         if (OnSlope()&& !exitingSlope)
         {
@@ -264,6 +309,11 @@ bool ReadyToJump;
         {
             Vector3 limitedvel = flatvel.normalized * speed;
             rb.linearVelocity = new Vector3(limitedvel.x, rb.linearVelocity.y, limitedvel.z);
+        }
+
+        if (maxYSpeed != 0 && rb.linearVelocity.y > maxYSpeed)
+        {
+            rb.linearVelocity = new Vector3(rb.linearVelocity.x, maxYSpeed,rb.linearVelocity.z );
         }
     }
 
