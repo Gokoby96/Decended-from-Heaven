@@ -36,7 +36,7 @@ public class CameraControl : MonoBehaviour
     
     private float horizontalInput;
     private float verticalInput;
-    
+    public bool overrideFov = false;
   
 
     private void Start()
@@ -54,19 +54,13 @@ public class CameraControl : MonoBehaviour
 
     private void Update()
     {
-        // mouse input aldığımız yer burası
-        float mouseX = Input.GetAxis("Mouse X")*Time.deltaTime * Sensx;
-        float mouseY = Input.GetAxis("Mouse Y")*Time.deltaTime * Sensy;
-        
-        
-        
-        
-        yRotation += mouseX;
-        xRotation -= mouseY;
-        xRotation = Mathf.Clamp(xRotation, -90f, 90f);
-        verticalInput = Input.GetAxisRaw("Vertical");
-        float horizontalInput = Input.GetAxisRaw("Horizontal");
-        
+        var horizontalInput = HandleInput();
+
+        CameraMovement(horizontalInput);
+    }
+
+    private void CameraMovement(float horizontalInput)
+    {
         float tiltBoost = 1f;
 
 // Eğer sprint yapıyorsak tilt biraz daha güçlü olsun
@@ -114,6 +108,19 @@ public class CameraControl : MonoBehaviour
         playerCam.fieldOfView = Mathf.Lerp(playerCam.fieldOfView, targetFOV, fovLerpSpeed * Time.deltaTime);
     }
 
-   
-   
+    private float HandleInput()
+    {
+        // mouse input aldığımız yer burası
+        float mouseX = Input.GetAxis("Mouse X")*Time.deltaTime * Sensx;
+        float mouseY = Input.GetAxis("Mouse Y")*Time.deltaTime * Sensy;
+        
+       
+        
+        yRotation += mouseX;
+        xRotation -= mouseY;
+        xRotation = Mathf.Clamp(xRotation, -90f, 90f);
+        verticalInput = Input.GetAxisRaw("Vertical");
+        float horizontalInput = Input.GetAxisRaw("Horizontal");
+        return horizontalInput;
+    }
 }

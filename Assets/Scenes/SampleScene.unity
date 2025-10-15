@@ -449,6 +449,7 @@ MonoBehaviour:
   fovLerpSpeed: 8
   wallrunTiltAmount: 10
   wallrunTiltSpeed: 5
+  overrideFov: 0
 --- !u!1 &410087039
 GameObject:
   m_ObjectHideFlags: 0
@@ -1471,7 +1472,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   walkSpeed: 7
   sprintspeed: 10
-  slideSpeed: 20
+  slideSpeed: 10
   wallRunSpeed: 8
   dashSpeed: 20
   dashSpeedChangeFactor: 50
@@ -1487,13 +1488,17 @@ MonoBehaviour:
   jump: 32
   sprintKey: 304
   crouchKey: 99
+  standUpCastDistance: 0.2
+  whatIsGround:
+    serializedVersion: 2
+    m_Bits: 129
   oriantation: {fileID: 944796479}
   state: 0
   dashing: 0
   sliding: 0
   wallrunning: 0
   crouchYScale: 0.5
-  crouchSpeed: 0
+  crouchSpeed: 5
   jumpForce: 15
   jumpCooldown: 0.25
   Airmultiplier: 0.4
@@ -1512,7 +1517,8 @@ MonoBehaviour:
   orientation: {fileID: 944796479}
   playerobj: {fileID: 937278622}
   maxSlideTime: 0.75
-  slideForce: 300
+  slideBoostForce: 5
+  frictionCompensation: 0.5
   slideYscale: 0.5
   slideKey: 306
 --- !u!114 &1723308951

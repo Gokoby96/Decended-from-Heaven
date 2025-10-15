@@ -45,6 +45,10 @@ public class PlayerMovement : MonoBehaviour
     public KeyCode sprintKey = KeyCode.LeftShift;
     public KeyCode crouchKey = KeyCode.LeftControl;
     
+    [Header("Stand Up Check")]
+    public float standUpCastDistance = 0.2f; 
+    public LayerMask whatIsGround;
+    
     
     public Transform oriantation;
     //bu ise playerın movement stateini tutucak 
@@ -188,7 +192,7 @@ bool ReadyToJump;
             }
         }
         //crouching state inde ise
-        else if (UnityEngine.Input.GetKeyDown(crouchKey))
+        else if (UnityEngine.Input.GetKey(crouchKey))
         {
             state = MovementState.crouching;
             desiredMoveSpeed = crouchSpeed;
@@ -268,6 +272,7 @@ bool ReadyToJump;
         speedChangeFactor = 1f;
         keepMomentum = false;
     }
+    
     private void MovePlayer()
     {
         if (state == MovementState.dashing)

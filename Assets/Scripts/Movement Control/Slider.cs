@@ -11,7 +11,9 @@ public class Slider : MonoBehaviour
 
     [Header("Sliding")] 
     public float maxSlideTime;
-    public float slideForce;
+    //public float slideForce;
+    public float slideBoostForce ; 
+    public float frictionCompensation ;
     private float slideTimer;
 
 
@@ -36,18 +38,25 @@ private void Start()
 
 private void Update()
 {
-    horizontalInput = Input.GetAxis("Horizontal");
-    verticalInput = Input.GetAxis("Vertical");
+    horizontalInput = Input.GetAxisRaw("Horizontal");
+    verticalInput = Input.GetAxisRaw("Vertical");
+    
+    
+    
+    bool isSprintKeyDown = UnityEngine.Input.GetKey(pm.sprintKey);
+   
+    bool isGrounded = (pm.state != PlayerMovement.MovementState.air);
+    
+    bool isMoving = (horizontalInput != 0 || verticalInput != 0);
 
-    if (Input.GetKeyDown(slideKey)&& (horizontalInput != 0 || verticalInput != 0))
+    if (Input.GetKeyDown(slideKey) && isMoving && isGrounded && isSprintKeyDown)
     {
+       
         StartSlide();
     }
+    
+   
 
-    if (Input.GetKeyUp(slideKey)&& pm.sliding)
-    {
-        StopSlide();
-    }
 }
 
 private void StartSlide()
@@ -56,28 +65,50 @@ private void StartSlide()
     playerobj.localScale = new Vector3(playerobj.localScale.x, slideYscale, playerobj.localScale.z);
     rb.AddForce(Vector3.down * 5f, ForceMode.Impulse);
     slideTimer = maxSlideTime;
+    //Mevcut hızı al ve üzerine anlık kuvvet (Boost) uygula
+    Vector3 flatVel = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
+    
+    Vector3 slideDirection = orientation.forward * verticalInput + orientation.right * horizontalInput;
+    
+    if (rb.linearVelocity.y > 0)
+    {
+        rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
+    }
+    rb.AddForce(slideDirection.normalized * slideBoostForce, ForceMode.Impulse); 
+
+
 }
 
 private void SlideMovement()
 {
-    Vector3 inputDirection = orientation.forward* verticalInput + orientation.right * horizontalInput;
+    Vector3 inputDirection = orientation.forward * verticalInput + orientation.right * horizontalInput;
+        
+        slideTimer -= Time.deltaTime;
+        Vector3 flatVel = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
+        
+        if (slideTimer <= 0 || flatVel.magnitude < pm.walkSpeed) 
+        {
+            StopSlide();
+            return; 
+        }
+       // Bu kuvvet, slideForce'un eski rolünü üstlenir, ancak artık hız artırmaz, sadece yavaşlamayı yavaşlatır.
+            Vector3 slideDirection = orientation.forward * verticalInput + orientation.right * horizontalInput;
  
   
 
     if (!pm.OnSlope()|| rb.linearVelocity.y> -0.1f)
     {
-        rb.AddForce(inputDirection.normalized * slideForce, ForceMode.Force);
-        slideTimer -= Time.deltaTime;
+        rb.AddForce(pm.GetSlopeMoveDirection(slideDirection) * 40f, ForceMode.Force); // Hafif yamaç aşağı itme
     }
+        
+    
     else
     {
-        rb.AddForce(pm.GetSlopeMoveDirection(inputDirection) * slideForce, ForceMode.Force);
+        rb.AddForce(slideDirection.normalized * frictionCompensation, ForceMode.Force); 
     }
+    
 
-    if (slideTimer<=0)
-    {
-        StopSlide();
-    }
+   
 }
 
 private void FixedUpdate()
