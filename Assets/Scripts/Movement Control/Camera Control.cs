@@ -23,6 +23,10 @@ public class CameraControl : MonoBehaviour
     public float normalFOV = 60f;
     public float sprintFOV = 75f;
     public float fovLerpSpeed = 8f;
+    public float dashFOV = 90f;            // Dash sırasında FOV (istersen artır)
+    public float dashFOVSpeed = 12f;
+    
+
     
     [Header("Wallrun Camera Tilt")]
     public float wallrunTiltAmount ;   // Duvara paralel eğim
@@ -36,7 +40,8 @@ public class CameraControl : MonoBehaviour
     
     private float horizontalInput;
     private float verticalInput;
-    public bool overrideFov = false;
+    
+   
   
 
     private void Start()
@@ -61,6 +66,7 @@ public class CameraControl : MonoBehaviour
 
     private void CameraMovement(float horizontalInput)
     {
+        
         float tiltBoost = 1f;
 
 // Eğer sprint yapıyorsak tilt biraz daha güçlü olsun
@@ -92,21 +98,31 @@ public class CameraControl : MonoBehaviour
         transform.rotation = Quaternion.Euler(xRotation, yRotation, currentTilt);
         orientaion.rotation = Quaternion.Euler(0, yRotation, 0);
         
-        float targetFOV;
+       
 
 // Eğer sprint atıyorsa ve ileri gidiyorsa FOV büyür
-        if (playerMovement.state == PlayerMovement.MovementState.sprinting && verticalInput > 0)
+        float targetFOV = normalFOV;
+        float lerpSpeed = fovLerpSpeed;
+
+        if (playerMovement.state == PlayerMovement.MovementState.wallRunning)
+        {
+            targetFOV = sprintFOV + 5f; // Wallrun FOV (önceden eklediğimiz)
+            lerpSpeed = fovLerpSpeed * 2f;
+        }
+        else if (playerMovement.state == PlayerMovement.MovementState.dashing)
+        {
+            targetFOV = dashFOV; // Dash sırasında daha geniş FOV
+            lerpSpeed = dashFOVSpeed;
+        }
+        else if (playerMovement.state == PlayerMovement.MovementState.sprinting && verticalInput > 0)
         {
             targetFOV = sprintFOV;
         }
-        
-        else
-        {
-            targetFOV = normalFOV;
-        }
 
-        playerCam.fieldOfView = Mathf.Lerp(playerCam.fieldOfView, targetFOV, fovLerpSpeed * Time.deltaTime);
+        playerCam.fieldOfView = Mathf.Lerp(playerCam.fieldOfView, targetFOV, lerpSpeed * Time.deltaTime);
     }
+       
+    
 
     private float HandleInput()
     {

@@ -45,14 +45,19 @@ public class PlayerMovement : MonoBehaviour
     public KeyCode sprintKey = KeyCode.LeftShift;
     public KeyCode crouchKey = KeyCode.LeftControl;
     
-    [Header("Stand Up Check")]
-    public float standUpCastDistance = 0.2f; 
-    public LayerMask whatIsGround;
+    [Header("Crouch Ceiling Check")]
+    public float ceilingCheckDistance = 1.0f;
+    public LayerMask whatIsCeiling;
+    private bool blockedAbove;
+    private bool isCrouching = false;
+    
+   
     
     
     public Transform oriantation;
     //bu ise playerın movement stateini tutucak 
     public MovementState state;
+   
   // Movement stateleri enum listesinde tutuyoruz 
     public enum MovementState
     {
@@ -73,6 +78,9 @@ public class PlayerMovement : MonoBehaviour
 public float crouchYScale;
 public float crouchSpeed;
 private float startYscale;
+
+
+
 
 
     float horizontalınput;
@@ -104,6 +112,16 @@ bool ReadyToJump;
         Input();
         StateHandler();
         SpeedControl();
+        CheckCeiling();
+        
+        if (isCrouching && !blockedAbove && !UnityEngine.Input.GetKey(crouchKey))
+        {
+            StopCrouch();
+        }
+        
+       
+        
+       
         // sürükleme
         if (state == MovementState.walking || state == MovementState.sprinting || state == MovementState.crouching)
         {
@@ -118,6 +136,14 @@ bool ReadyToJump;
     private void FixedUpdate()
     {
         MovePlayer();
+    }
+    private void CheckCeiling()
+    {
+        // Karakterin üstünde engel var mı kontrol et
+        blockedAbove = Physics.Raycast(transform.position, Vector3.up, ceilingCheckDistance, whatIsCeiling);
+        
+        Color rayColor = blockedAbove ? Color.red : Color.green;
+        Debug.DrawRay(transform.position, Vector3.up * ceilingCheckDistance, rayColor);
     }
 
     private void Input()
@@ -134,10 +160,10 @@ bool ReadyToJump;
                 WallRunning wr = GetComponent<WallRunning>();
                 Vector3 wallNormal = wr.wallRight ? wr.rightWallhit.normal : wr.leftWallhit.normal;
 
-                // WallJump fonksiyonunu çağır
+               
                 WallJump(wallNormal);
 
-                // Wallrun durdur
+                
                 wallrunning = false;
             }
             else
@@ -150,13 +176,21 @@ bool ReadyToJump;
         // crouching işlemi
         if (UnityEngine.Input.GetKeyDown(crouchKey))
         {
-            transform.localScale = new Vector3(transform.localScale.x ,crouchYScale , transform.localScale.z);
-            rb.AddForce(Vector3.down* 80f, ForceMode.Impulse);
+            StartCrouch();
         }
 
         if (UnityEngine.Input.GetKeyUp(crouchKey))
         {
-            transform.localScale = new Vector3(transform.localScale.x ,startYscale , transform.localScale.z);
+            if (!blockedAbove && state == MovementState.walking)
+            {
+               
+                // Üstü açık, normal yüksekliğe dön
+                StopCrouch();
+            }
+            else
+            {
+                StartCoroutine(WaitUntilClear());
+            }
         }
     }
 // bu fonksiyon player statelerini tutup hızını ayarlamamıza yarayacak
@@ -249,6 +283,17 @@ bool ReadyToJump;
     }
 
     private float speedChangeFactor;
+    private void StartCrouch()
+    {
+        isCrouching = true;
+        transform.localScale = new Vector3(transform.localScale.x, crouchYScale, transform.localScale.z);
+        rb.AddForce(Vector3.down * 80f, ForceMode.Impulse);
+    }
+    private void StopCrouch()
+    {
+        isCrouching = false;
+        transform.localScale = new Vector3(transform.localScale.x, startYscale, transform.localScale.z);
+    }
 
     private IEnumerator SmoothlyLerpMoveSpeed()
     {
@@ -358,6 +403,21 @@ public  bool OnSlope()
         // Yukarı ve duvardan uzaklaşma yönü
         Vector3 jumpDirection = transform.up + wallNormal;
         rb.AddForce(jumpDirection.normalized * jumpForce, ForceMode.Impulse);
+    }
+
+    private IEnumerator WaitUntilClear()
+    {
+        Debug.Log("WaitUntilClear başlatıldı. Engel kalkması bekleniyor...");
+        // Engel kalkana kadar bekle
+        while (blockedAbove)
+        {
+            CheckCeiling();
+            yield return new WaitForSeconds(0.1f);
+        }
+        Debug.Log("Engel kalktı! Scale düzeltiliyor.");
+      
+        StopCrouch();
+        
     }
 
 }

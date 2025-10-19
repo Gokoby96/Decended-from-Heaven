@@ -447,9 +447,10 @@ MonoBehaviour:
   normalFOV: 60
   sprintFOV: 75
   fovLerpSpeed: 8
+  dashFOV: 90
+  dashFOVSpeed: 5
   wallrunTiltAmount: 10
   wallrunTiltSpeed: 5
-  overrideFov: 0
 --- !u!1 &410087039
 GameObject:
   m_ObjectHideFlags: 0
@@ -1488,10 +1489,10 @@ MonoBehaviour:
   jump: 32
   sprintKey: 304
   crouchKey: 99
-  standUpCastDistance: 0.2
-  whatIsGround:
+  ceilingCheckDistance: 1
+  whatIsCeiling:
     serializedVersion: 2
-    m_Bits: 129
+    m_Bits: 128
   oriantation: {fileID: 944796479}
   state: 0
   dashing: 0
@@ -1567,7 +1568,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   orientation: {fileID: 944796479}
   playerCam: {fileID: 330585546}
-  dashForce: 200
+  dashForce: 50
   dashUpwardForce: 0
   maxDashYSpeed: 15
   dashDuration: 0.25
