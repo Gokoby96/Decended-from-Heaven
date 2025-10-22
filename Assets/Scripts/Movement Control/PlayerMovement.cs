@@ -419,5 +419,9 @@ public  bool OnSlope()
         StopCrouch();
         
     }
+    public bool HasCeilingAbove(float checkDistance = 0.5f)
+    {
+        return Physics.Raycast(transform.position, Vector3.up, checkDistance);
+    }
 
 }

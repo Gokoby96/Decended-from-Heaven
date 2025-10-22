@@ -1,4 +1,6 @@
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Slider : MonoBehaviour
@@ -118,10 +120,31 @@ private void FixedUpdate()
         SlideMovement();
     }
 }
+private IEnumerator WaitUntilClearThenReset()
+{
+    // Engel kalkana kadar bekle
+    while (Physics.Raycast(playerobj.position, Vector3.up, pm.ceilingCheckDistance, pm.whatIsCeiling))
+    {
+        yield return new WaitForSeconds(0.1f);
+    }
+
+    // Engel kalktıktan sonra scale’i düzelt
+    playerobj.localScale = new Vector3(playerobj.localScale.x, startYscale, playerobj.localScale.z);
+    
+}
 
 private void StopSlide()
 {
-    playerobj.localScale = new Vector3(playerobj.localScale.x, startYscale, playerobj.localScale.z);
     pm.sliding = false;
+    if (Physics.Raycast(playerobj.position, Vector3.up, pm.ceilingCheckDistance, pm.whatIsCeiling))
+    {
+        // Tavana çarpmışsa bekle, sonra düzelt
+        StartCoroutine(WaitUntilClearThenReset());
+    }
+    else
+    {
+        // Tavan yoksa direkt düzelt
+        playerobj.localScale = new Vector3(playerobj.localScale.x, startYscale, playerobj.localScale.z);
+    }
 }
 }
