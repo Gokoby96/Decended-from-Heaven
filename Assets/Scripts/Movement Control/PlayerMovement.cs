@@ -61,6 +61,7 @@ public class PlayerMovement : MonoBehaviour
   // Movement stateleri enum listesinde tutuyoruz 
     public enum MovementState
     {
+        freeze,
         walking,
         sprinting,
         crouching,
@@ -70,6 +71,8 @@ public class PlayerMovement : MonoBehaviour
         air
     }
 
+    public bool activeGrapple;
+    public bool freeze;
     public bool dashing;
     public bool sliding;
     public bool wallrunning;
@@ -123,7 +126,7 @@ bool ReadyToJump;
         
        
         // sürükleme
-        if (state == MovementState.walking || state == MovementState.sprinting || state == MovementState.crouching)
+        if (state == MovementState.walking || state == MovementState.sprinting || state == MovementState.crouching && !activeGrapple)
         {
             rb.linearDamping = groundDrag;
         }
@@ -193,11 +196,38 @@ bool ReadyToJump;
             }
         }
     }
-// bu fonksiyon player statelerini tutup hızını ayarlamamıza yarayacak
+
+  
+    public void JumpToPosition(Vector3 targetPosition, float trajectoryHeight)
+    {
+        activeGrapple = true;
+        velocitySet= CalculateJumpVelocity(transform.position, targetPosition, trajectoryHeight);
+    Invoke(nameof(SetVelocity), 0.1f);
+      
+    }
+
+    private Vector3 velocitySet;
+    
+    private void SetVelocity()
+    {
+       
+        rb.linearVelocity = velocitySet;
+        
+    }
+
+  
+   
+
+    // bu fonksiyon player statelerini tutup hızını ayarlamamıza yarayacak
     private void StateHandler()
     {
-        // dashing State
-        if (dashing)
+        if (freeze)
+        {
+           state = MovementState.freeze;
+           desiredMoveSpeed = 0;
+           rb.linearVelocity = Vector3.zero;
+        }
+       else if  (dashing)
         {
             state = MovementState.dashing;
             desiredMoveSpeed = dashSpeed;
@@ -320,6 +350,10 @@ bool ReadyToJump;
     
     private void MovePlayer()
     {
+        if (activeGrapple)
+        {
+            return;
+        }
         if (state == MovementState.dashing)
         {
             return;
@@ -347,6 +381,10 @@ bool ReadyToJump;
 
     private void SpeedControl()
     {
+        if (activeGrapple)
+        {
+            return;
+        }
         if (OnSlope()&& !exitingSlope)
         {
             if (rb.linearVelocity.magnitude> speed)
@@ -422,6 +460,18 @@ public  bool OnSlope()
     public bool HasCeilingAbove(float checkDistance = 0.5f)
     {
         return Physics.Raycast(transform.position, Vector3.up, checkDistance);
+    }
+
+    public Vector3 CalculateJumpVelocity(Vector3 startPoint, Vector3 endPoint, float trajectoryHeight)
+    {
+        float gravity = Physics.gravity.y;
+        float displacementY = endPoint.y - startPoint.y;
+        Vector3 displacementXZ = new Vector3(endPoint.x - startPoint.x, 0, endPoint.z - startPoint.z);
+
+        Vector3 velocityY = Vector3.up * Mathf.Sqrt(-2 * gravity * trajectoryHeight);
+        Vector3 velocityXZ = displacementXZ/ (Mathf.Sqrt(-2*trajectoryHeight / gravity));
+        
+        return velocityXZ + velocityY;
     }
 
 }

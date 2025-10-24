@@ -16,9 +16,7 @@ public class Dashing : MonoBehaviour
     public float maxDashYSpeed;
     public float dashDuration;
 
-    [Header("CameraEffects")]
-    
-    public float dashFov;
+   
 
     [Header("Settings")]
     public bool useCameraForward = true;
@@ -62,9 +60,9 @@ public class Dashing : MonoBehaviour
         Transform forwardT;
 
         if (useCameraForward)
-            forwardT = playerCam; /// where you're looking
+            forwardT = playerCam;
         else
-            forwardT = orientation; /// where you're facing (no up or down)
+            forwardT = orientation; 
 
         Vector3 direction = GetDirection(forwardT);
 
