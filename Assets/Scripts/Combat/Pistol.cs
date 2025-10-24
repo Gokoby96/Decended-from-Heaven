@@ -6,6 +6,7 @@ public class Pistol : MonoBehaviour
     public float damage ;
     public float range ;
     public float fireRate ;
+    public ParticleSystem bloodEffect;
     private Camera fpsCam;
 
     private float nextTimeToFire ;
@@ -33,8 +34,14 @@ public class Pistol : MonoBehaviour
             EnemyHealth enemy = hit.transform.GetComponent<EnemyHealth>();
             if (enemy != null)
                 enemy.TakeDamage(damage);
+            if (bloodEffect != null)
+            {
+                ParticleSystem blood = Instantiate(bloodEffect, hit.point, Quaternion.LookRotation(hit.normal));
+                blood.Play();
+                Destroy(blood.gameObject, 2f); // 2 saniye sonra temizle
+            }
+        }
 Debug.Log("attack");
             Debug.DrawRay(fpsCam.transform.position, fpsCam.transform.forward * range, Color.red, 1f);
         }
     }
-}
