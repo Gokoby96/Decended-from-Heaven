@@ -89,6 +89,15 @@ public class Grapling : MonoBehaviour
 
       Invoke(nameof(StopGrapple), 1f);
    }
+   public bool IsGrappling()
+   {
+      return grappling;
+   }
+
+   public Vector3 GetGrapplePoint()
+   {
+      return grapplePoint;
+   }
 
    public void StopGrapple()
    {

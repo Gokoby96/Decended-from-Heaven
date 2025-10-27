@@ -14,6 +14,7 @@ public class PlayerMovement : MonoBehaviour
     public float slideSpeed;
     public float wallRunSpeed;
     public float dashSpeed;
+    public float swingSpeed;
     public float dashSpeedChangeFactor;
     public float maxYSpeed;
     
@@ -63,6 +64,7 @@ public class PlayerMovement : MonoBehaviour
     {
         freeze,
         walking,
+        swinging,
         sprinting,
         crouching,
         wallRunning,
@@ -73,6 +75,7 @@ public class PlayerMovement : MonoBehaviour
 
     public bool activeGrapple;
     public bool freeze;
+    public bool swinging;
     public bool dashing;
     public bool sliding;
     public bool wallrunning;
@@ -255,6 +258,11 @@ bool ReadyToJump;
                 desiredMoveSpeed = sprintspeed;
             }
         }
+        else if (swinging)
+        {
+            state = MovementState.swinging;
+            desiredMoveSpeed = swingSpeed;
+        }
         //crouching state inde ise
         else if (UnityEngine.Input.GetKey(crouchKey))
         {
@@ -350,6 +358,7 @@ bool ReadyToJump;
     
     private void MovePlayer()
     {
+       
         if (activeGrapple)
         {
             return;
@@ -468,8 +477,8 @@ public  bool OnSlope()
         float displacementY = endPoint.y - startPoint.y;
         Vector3 displacementXZ = new Vector3(endPoint.x - startPoint.x, 0, endPoint.z - startPoint.z);
 
-        Vector3 velocityY = Vector3.up * Mathf.Sqrt(-2 * gravity * trajectoryHeight);
-        Vector3 velocityXZ = displacementXZ/ (Mathf.Sqrt(-2*trajectoryHeight / gravity));
+        Vector3 velocityY = Vector3.up * Mathf.Sqrt( -1*gravity * trajectoryHeight);
+        Vector3 velocityXZ = displacementXZ/ (Mathf.Sqrt(-1*trajectoryHeight / gravity));
         
         return velocityXZ + velocityY;
     }
