@@ -25,10 +25,11 @@ public class Grapling : MonoBehaviour
    public KeyCode grappleKey = KeyCode.Mouse1;
 
    private bool grappling;
+  
 
    private void Start()
    {
-      
+     
    }
 
    private void Update()
@@ -46,26 +47,35 @@ public class Grapling : MonoBehaviour
 
    private void StartGrapple()
    {
-      if (grapplingCDTimer > 0) 
-      {
+      if (grapplingCDTimer > 0)
          return;
-      }
+
+      // Swing varsa durdur
       GetComponent<Swing>().StopSwing();
-      grappling = true;
-      pm.freeze = true;
+
       RaycastHit hit;
-      if (Physics.Raycast(cam.position,cam.forward,out hit, maxGrappleDistance, whatIsGrappableable))
+      if (Physics.Raycast(cam.position, cam.forward, out hit, maxGrappleDistance, whatIsGrappableable))
       {
+       
          grapplePoint = hit.point;
-         Invoke(nameof(ExecuteGrapple),grappleDelayTime);
+         grappling = true;
+         pm.freeze = true;
+
+         
+         lr.enabled = true;
+         lr.SetPosition(1, grapplePoint);
+         Invoke(nameof(ExecuteGrapple), grappleDelayTime);
       }
       else
       {
-         grapplePoint = cam.position + cam.forward * maxGrappleDistance;
-         Invoke(nameof(StopGrapple),grappleDelayTime);
+        
+         grappling = false;
+         pm.freeze = false;
+
+        
+         lr.enabled = false;
       }
-      lr.enabled = true;
-      lr.SetPosition(1, grapplePoint);
+     
    }
 
    private void LateUpdate()
@@ -106,6 +116,7 @@ public class Grapling : MonoBehaviour
       grappling = false;
       pm.activeGrapple = false; 
       grapplingCDTimer = grapplingCD;
+      
       
       lr.enabled = false;
    }

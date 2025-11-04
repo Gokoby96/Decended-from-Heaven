@@ -30651,7 +30651,6 @@ GameObject:
   - component: {fileID: 1592856230}
   - component: {fileID: 1592856229}
   - component: {fileID: 1592856234}
-  - component: {fileID: 1592856235}
   m_Layer: 0
   m_Name: GrappleGun
   m_TagString: Untagged
@@ -30696,7 +30695,7 @@ MonoBehaviour:
   lr: {fileID: 1592856230}
   maxGrappleDistance: 25
   grappleDelayTime: 0.25
-  overshootYAxis: 0.3
+  overshootYAxis: 0.1
   grapplingCD: 0
   grappleKey: 324
 --- !u!120 &1592856230
@@ -30885,32 +30884,10 @@ MonoBehaviour:
   horizontalThrustForce: 2000
   forwardThrustForce: 3000
   extendCableSpeed: 20
---- !u!114 &1592856235
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1592856227}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6ffea6453fee12c41b261aeab8862214, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  grappling: {fileID: 1592856229}
-  quality: 200
-  damper: 14
-  strength: 800
-  velocity: 15
-  waveCount: 3
-  waveHeight: 1
-  affectCurve:
-    m_Curve: []
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  lr: {fileID: 0}
-  currentGrapplePosition: {x: 0, y: 0, z: 0}
+  ropeSegments: 25
+  waveAmplitude: 0.15
+  waveFrequency: 3
+  waveSpeed: 2
 --- !u!1 &1681548946
 GameObject:
   m_ObjectHideFlags: 0
