@@ -50,6 +50,7 @@ public class Grapling : MonoBehaviour
       {
          return;
       }
+      GetComponent<Swing>().StopSwing();
       grappling = true;
       pm.freeze = true;
       RaycastHit hit;

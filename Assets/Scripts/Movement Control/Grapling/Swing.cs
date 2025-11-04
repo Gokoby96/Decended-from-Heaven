@@ -75,9 +75,11 @@ public class Swing : MonoBehaviour
             currentGrapplePosition = gunTip.position;
 
         }
+        GetComponent<Grapling>().StopGrapple();
+        pm.swinging = true;
     }
 
-    void StopSwing()
+    public void StopSwing()
     {
         pm.swinging = false;
         lr.positionCount = 0;
