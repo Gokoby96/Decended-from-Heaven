@@ -153,19 +153,18 @@ private void WallJump()
 
     
     Vector3 jumpDirection =
-        (orientation.forward * 0.8f) +     
-        (wallNormal * 0.4f) +              
-        (Vector3.up * 0.6f);               
+        (orientation.forward * 2f) +     
+        (Vector3.up * 0.2f);               
 
     jumpDirection.Normalize();
 
    
-    Vector3 preservedVelocity = rb.linearVelocity * 0.5f;
+    
     rb.linearVelocity = Vector3.zero;
 
     
     float jumpForce = wallJumpSideForce; 
-    rb.AddForce((jumpDirection * jumpForce) + preservedVelocity, ForceMode.Impulse);
+    rb.AddForce((jumpDirection * jumpForce) , ForceMode.VelocityChange);
 
     StopWallRun();
 

@@ -92,7 +92,7 @@ public class Grapling : MonoBehaviour
       Vector3 lowestPoint = new Vector3(transform.position.x, transform.position.y - 1f, transform.position.z);
 
       float grapplePointRelativeYPos = grapplePoint.y - lowestPoint.y;
-      float highestPointOnArc = grapplePointRelativeYPos + overshootYAxis;
+      float highestPointOnArc = Mathf.Min(grapplePointRelativeYPos + overshootYAxis, 10f);
 
       if (grapplePointRelativeYPos < 0) highestPointOnArc = overshootYAxis;
 

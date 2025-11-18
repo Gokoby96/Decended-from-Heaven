@@ -35972,7 +35972,7 @@ MonoBehaviour:
   walkSpeed: 7
   sprintspeed: 10
   slideSpeed: 10
-  wallRunSpeed: 8
+  wallRunSpeed: 10
   dashSpeed: 20
   swingSpeed: 10
   dashSpeedChangeFactor: 50
@@ -36004,7 +36004,7 @@ MonoBehaviour:
   crouchSpeed: 5
   jumpForce: 15
   jumpCooldown: 0.25
-  Airmultiplier: 0.4
+  Airmultiplier: 1
 --- !u!114 &1723308950
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -36055,7 +36055,7 @@ MonoBehaviour:
   wallClimbSpeed: 3
   wallJumpKey: 32
   wallJumpUpForce: 0
-  wallJumpSideForce: 50
+  wallJumpSideForce: 100
 --- !u!114 &1723308952
 MonoBehaviour:
   m_ObjectHideFlags: 0

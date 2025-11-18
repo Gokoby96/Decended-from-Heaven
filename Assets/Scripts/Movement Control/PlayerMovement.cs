@@ -157,7 +157,7 @@ bool ReadyToJump;
         // ınput alınan yer
         horizontalınput = UnityEngine.Input.GetAxis("Horizontal");
         verticalınput = UnityEngine.Input.GetAxis("Vertical");
-        if (UnityEngine.Input.GetKeyDown(jump)&& ReadyToJump&& isGrounded)
+        if (UnityEngine.Input.GetKeyDown(jump)&& ReadyToJump&& isGrounded && !wallrunning)
         {
             ReadyToJump = false;
             if (wallrunning)
@@ -466,10 +466,7 @@ public  bool OnSlope()
         StopCrouch();
         
     }
-    public bool HasCeilingAbove(float checkDistance = 0.5f)
-    {
-        return Physics.Raycast(transform.position, Vector3.up, checkDistance);
-    }
+   
 
     public Vector3 CalculateJumpVelocity(Vector3 startPoint, Vector3 endPoint, float trajectoryHeight)
     {
