@@ -160,19 +160,8 @@ bool ReadyToJump;
         if (UnityEngine.Input.GetKeyDown(jump)&& ReadyToJump&& isGrounded && !wallrunning)
         {
             ReadyToJump = false;
-            if (wallrunning)
-            {
-                // WallRunning scriptinden wall normalini al
-                WallRunning wr = GetComponent<WallRunning>();
-                Vector3 wallNormal = wr.wallRight ? wr.rightWallhit.normal : wr.leftWallhit.normal;
 
-               
-                WallJump(wallNormal);
-
-                
-                wallrunning = false;
-            }
-            else
+          
             {
                 Jump();
             }
@@ -358,11 +347,11 @@ bool ReadyToJump;
     
     private void MovePlayer()
     {
-       
         if (activeGrapple)
         {
             return;
         }
+       
         if (state == MovementState.dashing)
         {
             return;
@@ -442,15 +431,7 @@ public  bool OnSlope()
     {
         return Vector3.ProjectOnPlane(direction, slopeHit.normal).normalized;
     }
-    public void WallJump(Vector3 wallNormal)
-    {
-        exitingSlope = true; 
-        rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
-
-        // Yukarı ve duvardan uzaklaşma yönü
-        Vector3 jumpDirection = transform.up + wallNormal;
-        rb.AddForce(jumpDirection.normalized * jumpForce, ForceMode.Impulse);
-    }
+   
 
     private IEnumerator WaitUntilClear()
     {
