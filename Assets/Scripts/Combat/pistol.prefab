@@ -11,8 +11,8 @@ GameObject:
   - component: {fileID: 957806107726203826}
   - component: {fileID: 6862173412399798755}
   - component: {fileID: 2473900335429334300}
-  - component: {fileID: 7777724430498442485}
   - component: {fileID: 6492639433588860832}
+  - component: {fileID: 6655237270929612233}
   m_Layer: 0
   m_Name: pistol
   m_TagString: Untagged
@@ -88,27 +88,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &7777724430498442485
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6512599130088335737}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &6492639433588860832
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -123,4 +102,24 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   damage: 10
   range: 50
-  fireRate: 5
+  fireRate: 0.2
+  magazineSize: 12
+  totalAmmo: 48
+  reloadTime: 1.3
+  bloodEffect: {fileID: 0}
+  recoil: {fileID: 6655237270929612233}
+  ammoText: {fileID: 0}
+--- !u!114 &6655237270929612233
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6512599130088335737}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4706d58ef8ab78d4084ebc65a81e23ab, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  recoilAmount: 0.1
+  recoilSpeed: 10

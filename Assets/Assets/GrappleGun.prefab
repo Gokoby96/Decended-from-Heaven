@@ -20,7 +20,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &3941065946306824198
 Transform:
   m_ObjectHideFlags: 0
@@ -29,7 +29,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1121331383922147202}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -0.564, y: -0.454, z: 0.872}
   m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_ConstrainProportionsScale: 0
@@ -210,7 +210,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pm: {fileID: 0}
-  rb: {fileID: 0}
   cam: {fileID: 0}
   gunTip: {fileID: 8338084497078944307}
   whatIsGrappableable:
@@ -218,10 +217,10 @@ MonoBehaviour:
     m_Bits: 256
   lr: {fileID: 3698179738918715137}
   maxGrappleDistance: 25
-  grappleDelayTime: 0.25
+  grappleDelayTime: 0
+  overshootYAxis: 0
   grapplingCD: 0
   grappleKey: 324
-  grappleForce: 40
 --- !u!114 &7487063643968683197
 MonoBehaviour:
   m_ObjectHideFlags: 0
