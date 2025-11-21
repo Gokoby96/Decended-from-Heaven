@@ -14,7 +14,7 @@ public class Pistol : MonoBehaviour
     public int magazineSize = 12; 
     public int totalAmmo = 48; 
     public float reloadTime = 1.3f;
-    
+    public int maxAmmo = 48;
     [Header("Reload UI")]
     public  UnityEngine.UI.Slider reloadSlider;
 
@@ -136,5 +136,16 @@ public class Pistol : MonoBehaviour
     {
         if (ammoText != null)
             ammoText.text = currentAmmo + " / " + totalAmmo;
+    }
+    public bool AddAmmo(int amount)
+    {
+        if (totalAmmo >= maxAmmo)
+            return false;
+        totalAmmo += amount;
+        if (totalAmmo > maxAmmo)
+            totalAmmo = maxAmmo;
+
+        UpdateAmmoUI();
+        return true; 
     }
 }
