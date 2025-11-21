@@ -49,7 +49,7 @@ public class Pistol : MonoBehaviour
                 StartCoroutine(Reload());
         }
 
-        if (Input.GetButton("Fire1") && Time.time >= nextTimeToFire)
+        if (Input.GetMouseButton(0) && Time.time >= nextTimeToFire)
         {
             if (currentAmmo <= 0)
             {

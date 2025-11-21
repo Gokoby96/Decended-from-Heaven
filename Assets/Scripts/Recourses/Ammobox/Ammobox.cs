@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class Ammobox : MonoBehaviour
 {
-   
+    public AmmoTextEffect ammoEffect;
     public GameObject[] weaponsToRefill;
     public int ammoAmount = 30;
 
@@ -25,9 +25,13 @@ public class Ammobox : MonoBehaviour
                 }
             }
 
-           
+
             if (ammoAdded)
+            {
+                if (ammoEffect != null)
+                    ammoEffect.PlayEffect();
                 Destroy(gameObject);
+            }
         }
     }
 }

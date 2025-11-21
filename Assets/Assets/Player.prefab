@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 7996094627015888293}
   - component: {fileID: 8053155119647185303}
   - component: {fileID: 2538438191805343217}
+  - component: {fileID: 3080866919966780365}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -297,6 +298,23 @@ LineRenderer:
   m_UseWorldSpace: 1
   m_Loop: 0
   m_ApplyActiveColorSpace: 1
+--- !u!114 &3080866919966780365
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1225581917713801555}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1ff2f3e322ffb244cba5e0bfe9dc618a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHealth: 100
+  currentHealth: 100
+  redSlider: {fileID: 0}
+  yellowSlider: {fileID: 0}
+  delaySpeed: 0.2
 --- !u!1 &4799878136859909303
 GameObject:
   m_ObjectHideFlags: 0
@@ -373,7 +391,7 @@ GameObject:
   - component: {fileID: 4602435910678205874}
   m_Layer: 0
   m_Name: Player object
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
