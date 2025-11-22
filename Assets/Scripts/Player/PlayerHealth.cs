@@ -11,6 +11,7 @@ public class PlayerHealth : MonoBehaviour
     public UnityEngine.UI.Slider redSlider;    // anlık sağlık
     public UnityEngine.UI.Slider yellowSlider; // delayed / damage bar
     public float delaySpeed = 1f; // sarı barın düşüş hızı
+    public ShakeAnimations shakeAnimation;
 
     private void Start()
     {
@@ -42,6 +43,8 @@ public class PlayerHealth : MonoBehaviour
         currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
 
         UpdateHealthUIInstant();
+        if (shakeAnimation != null)
+            shakeAnimation.Shake();
 
         if (currentHealth <= 0)
         {
