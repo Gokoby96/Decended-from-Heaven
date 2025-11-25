@@ -30,6 +30,12 @@ public class PlayerHealth : MonoBehaviour
             if (yellowSlider.value < redSlider.value)
                 yellowSlider.value = redSlider.value;
         }
+     
+        else if (yellowSlider.value < redSlider.value)
+        {
+          
+            yellowSlider.value = redSlider.value; 
+        }
 
         if (Input.GetKeyDown(KeyCode.H))
         {
@@ -41,6 +47,7 @@ public class PlayerHealth : MonoBehaviour
     {
         currentHealth -= amount;
         currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
+        Debug.Log("Player took damage: " + amount + " CurrentHealth: " + currentHealth);
 
         UpdateHealthUIInstant();
         if (shakeAnimation != null)

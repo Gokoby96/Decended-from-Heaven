@@ -17,6 +17,7 @@ public class PlayerMovement : MonoBehaviour
     public float swingSpeed;
     public float dashSpeedChangeFactor;
     public float maxYSpeed;
+    public float grappleMaxSpeed = 20f; 
     
     
     private float desiredMoveSpeed;
@@ -203,7 +204,12 @@ bool ReadyToJump;
     private void SetVelocity()
     {
        
-        rb.linearVelocity = velocitySet;
+        Vector3 v = velocitySet;
+
+        if (v.magnitude > grappleMaxSpeed)
+            v = v.normalized * grappleMaxSpeed;
+
+        rb.linearVelocity = v;
         
     }
 
@@ -453,11 +459,22 @@ public  bool OnSlope()
     {
         float gravity = Physics.gravity.y;
         float displacementY = endPoint.y - startPoint.y;
-        Vector3 displacementXZ = new Vector3(endPoint.x - startPoint.x, 0, endPoint.z - startPoint.z);
+        Vector3 displacementXZ = new Vector3(endPoint.x - startPoint.x, 0f, endPoint.z - startPoint.z);
 
-        Vector3 velocityY = Vector3.up * Mathf.Sqrt( -1*gravity * trajectoryHeight);
-        Vector3 velocityXZ = displacementXZ/ (Mathf.Sqrt(-1*trajectoryHeight / gravity));
-        
+        float timeUp = Mathf.Sqrt(Mathf.Max(0.01f, -2 * trajectoryHeight / gravity));
+        float timeDown = Mathf.Sqrt(Mathf.Max(0.01f, 2 * (displacementY - trajectoryHeight) / gravity));
+
+        float totalTime = timeUp + timeDown;
+
+        if (totalTime <= 0.01f)
+        {
+            Debug.LogError("Grapple ERROR → totalTime = 0! Target çok yakın veya çok dengesiz.");
+            return Vector3.zero;
+        }
+
+        Vector3 velocityY = Vector3.up * Mathf.Sqrt(Mathf.Max(0.01f, -2 * gravity * trajectoryHeight));
+        Vector3 velocityXZ = displacementXZ / totalTime;
+
         return velocityXZ + velocityY;
     }
 

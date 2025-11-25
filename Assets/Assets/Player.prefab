@@ -15,10 +15,10 @@ GameObject:
   - component: {fileID: 7996094627015888293}
   - component: {fileID: 8053155119647185303}
   - component: {fileID: 2538438191805343217}
-  - component: {fileID: 3080866919966780365}
+  - component: {fileID: 2984986595070800447}
   m_Layer: 0
   m_Name: Player
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -88,6 +88,7 @@ MonoBehaviour:
   swingSpeed: 10
   dashSpeedChangeFactor: 50
   maxYSpeed: 0
+  grappleMaxSpeed: 50
   "speedIncreaseMult\u0131plier": 1.5
   slopeIncreaseMultiplier: 2.5
   maxslopeAngle: 40
@@ -298,7 +299,7 @@ LineRenderer:
   m_UseWorldSpace: 1
   m_Loop: 0
   m_ApplyActiveColorSpace: 1
---- !u!114 &3080866919966780365
+--- !u!114 &2984986595070800447
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -315,6 +316,7 @@ MonoBehaviour:
   redSlider: {fileID: 0}
   yellowSlider: {fileID: 0}
   delaySpeed: 0.2
+  shakeAnimation: {fileID: 0}
 --- !u!1 &4799878136859909303
 GameObject:
   m_ObjectHideFlags: 0

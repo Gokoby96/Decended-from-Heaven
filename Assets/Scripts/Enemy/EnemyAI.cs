@@ -1,6 +1,6 @@
 using UnityEngine;
 using UnityEngine.AI;
-public class DoomEnemyAI : MonoBehaviour
+public class EnemyAI : MonoBehaviour
 {
     public enum State { WANDER, CHASE, INVESTIGATE, ATTACK }
     public State currentState;
@@ -8,6 +8,7 @@ public class DoomEnemyAI : MonoBehaviour
     [Header("References")]
     public Transform player;
     private NavMeshAgent agent;
+    public PlayerHealth ph;
 
     [Header("Wander Settings")]
     public float wanderRadius = 10f;
@@ -26,6 +27,7 @@ public class DoomEnemyAI : MonoBehaviour
     [Header("Attack Settings")]
     public float attackRange = 2f;
     public float attackCooldown = 1.5f;
+    public float damage = 10f;
     private float attackTimer;
 
     private Vector3 lastSeenPosition;
@@ -113,9 +115,11 @@ public class DoomEnemyAI : MonoBehaviour
     void AttackState()
     {
         agent.isStopped = true;
+        Debug.Log("AttackState çalıştı");
 
         float dist = Vector3.Distance(transform.position, player.position);
 
+        // Eğer oyuncuyu göremezse
         if (!CanSeePlayer())
         {
             agent.isStopped = false;
@@ -123,6 +127,7 @@ public class DoomEnemyAI : MonoBehaviour
             return;
         }
 
+        // Oyuncu attack range dışında
         if (dist > attackRange)
         {
             agent.isStopped = false;
@@ -130,11 +135,17 @@ public class DoomEnemyAI : MonoBehaviour
             return;
         }
 
-        // Saldırı
+        
         if (attackTimer <= 0f)
         {
             Debug.Log("Enemy Attacked!");
-            // player.GetComponent<PlayerHealth>().TakeDamage(...)
+
+            
+           
+            if (ph != null)
+            {
+                ph.TakeDamage(damage); 
+            }
 
             attackTimer = attackCooldown;
         }
