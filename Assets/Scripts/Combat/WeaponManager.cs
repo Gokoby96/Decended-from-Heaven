@@ -46,6 +46,16 @@ public class WeaponManager : MonoBehaviour
         // Mevcut silahı kapat
         if (currentWeapon != null)
         {
+            Pistol pistol = currentWeapon.GetComponent<Pistol>();
+            if (pistol != null)
+            {
+                pistol.StopAllCoroutines(); 
+                pistol.isReloading = false; 
+                
+                if (pistol.reloadSlider != null)
+                    pistol.reloadSlider.gameObject.SetActive(false);
+            }
+
             Debug.Log("Deactivating: " + currentWeapon.name);
             currentWeapon.SetActive(false);
         }

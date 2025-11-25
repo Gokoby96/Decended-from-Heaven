@@ -15,13 +15,18 @@ public class Pistol : MonoBehaviour
     public int totalAmmo = 48; 
     public float reloadTime = 1.3f;
     public int maxAmmo = 48;
+    
     [Header("Reload UI")]
     public  UnityEngine.UI.Slider reloadSlider;
+    
+    [Header("Blood Effects")]
+    public ParticleSystem normalBloodEffect;
+    public ParticleSystem headshotBloodEffect;
 
     private int currentAmmo;
-    private bool isReloading = false;
+    public bool isReloading = false;
 
-    public ParticleSystem bloodEffect;
+    
     public GunRecoil recoil;
     private Camera fpsCam;
     public TextMeshProUGUI ammoText;
@@ -73,6 +78,14 @@ public class Pistol : MonoBehaviour
 
         while (t < reloadTime)
         {
+            if (!gameObject.activeInHierarchy) // Silah inaktifse Coroutine'i durdur
+            {
+                isReloading = false;
+                reloadSlider.gameObject.SetActive(false);
+                if (reloadSlider != null)
+                    reloadSlider.gameObject.SetActive(false);
+                yield break;
+            }
             t += Time.deltaTime;
             reloadSlider.value = t / reloadTime;   // Slider barı doldur
             yield return null;
@@ -111,20 +124,37 @@ public class Pistol : MonoBehaviour
 
         if (Physics.Raycast(fpsCam.transform.position, fpsCam.transform.forward, out hit, range))
         {
-            EnemyHealth enemy = hit.transform.GetComponent<EnemyHealth>();
+            EnemyHealth enemy = hit.transform.GetComponentInParent<EnemyHealth>();
 
             if (enemy != null)
             {
-               
-                enemy.TakeDamage(damage);
+                float appliedDamage = damage;
+                ParticleSystem bloodToPlay = normalBloodEffect;
 
-                
-                if (bloodEffect != null)
+                // Headshot kontrolü
+                if (hit.collider.CompareTag("Head"))
+                {
+                    appliedDamage = enemy.maxHealth; 
+                    bloodToPlay = headshotBloodEffect;
+                }
+
+                enemy.TakeDamage(appliedDamage);
+
+                if (bloodToPlay != null)
                 {
                     Vector3 spawnPos = hit.point + fpsCam.transform.forward * -1f;
-                    ParticleSystem blood = Instantiate(bloodEffect, spawnPos, Quaternion.LookRotation(hit.normal));
+                    ParticleSystem blood = Instantiate(bloodToPlay, spawnPos, Quaternion.LookRotation(hit.normal));
+
                     blood.Play();
-                    Destroy(blood.gameObject, 2f);
+
+                    
+                    float destroyTime = 2f;
+
+                    
+                    if (hit.collider.CompareTag("Head"))
+                        destroyTime = 1f;  
+
+                    Destroy(blood.gameObject, destroyTime);
                 }
             }
         }
