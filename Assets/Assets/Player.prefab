@@ -84,11 +84,11 @@ MonoBehaviour:
   sprintspeed: 10
   slideSpeed: 10
   wallRunSpeed: 10
-  dashSpeed: 20
+  dashSpeed: 30
   swingSpeed: 10
   dashSpeedChangeFactor: 50
-  maxYSpeed: 0
-  grappleMaxSpeed: 50
+  maxYSpeed: 10
+  grappleMaxSpeed: 40
   "speedIncreaseMult\u0131plier": 1.5
   slopeIncreaseMultiplier: 2.5
   maxslopeAngle: 40
@@ -156,7 +156,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   wallRunForce: 300
-  maxWallRunTime: 1.5
+  maxWallRunTime: 0.5
   wallCheckDistance: 0.7
   minJumpHeight: 2
   wallLeft: 0
