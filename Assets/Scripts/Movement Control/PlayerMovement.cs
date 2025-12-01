@@ -2,6 +2,7 @@ using System;
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine.Rendering.UI;
 
 public class PlayerMovement : MonoBehaviour
@@ -24,11 +25,12 @@ public class PlayerMovement : MonoBehaviour
     private float lastDesiredMoveSpeed;
     private MovementState lastState;
     private bool keepMomentum;
+    public TextMeshProUGUI speedText;
 
-
-    public float speedIncreaseMultıplier;
-    public float slopeIncreaseMultiplier;
-    
+    [Header("Wall Check")]
+    public float wallCheckDistance = 0.6f; 
+    public LayerMask whatIsWall;
+    private RaycastHit wallHit;
     
     [Header("Slope Handling")]
     public float maxslopeAngle;
@@ -120,6 +122,7 @@ bool ReadyToJump;
         StateHandler();
         SpeedControl();
         CheckCeiling();
+        ShowSpeed();
         
         if (isCrouching && !blockedAbove && !UnityEngine.Input.GetKey(crouchKey))
         {
@@ -129,7 +132,7 @@ bool ReadyToJump;
        
         
        
-        // sürükleme
+       
         if (state == MovementState.walking || state == MovementState.sprinting || state == MovementState.crouching && !activeGrapple)
         {
             rb.linearDamping = groundDrag;
@@ -230,6 +233,7 @@ bool ReadyToJump;
             state = MovementState.dashing;
             desiredMoveSpeed = dashSpeed;
             speedChangeFactor = dashSpeedChangeFactor;
+            
         }
         
         // wallrun state inde 
@@ -237,6 +241,7 @@ bool ReadyToJump;
         {
             state = MovementState.wallRunning;
             desiredMoveSpeed = wallRunSpeed;
+            
         }
         // slide state inde 
        else if (sliding)
@@ -262,17 +267,27 @@ bool ReadyToJump;
         else if (UnityEngine.Input.GetKey(crouchKey))
         {
             state = MovementState.crouching;
-            desiredMoveSpeed = crouchSpeed;
+            if (speed > crouchSpeed) 
+            { keepMomentum = true; 
+                desiredMoveSpeed = crouchSpeed; } 
+            else 
+            { desiredMoveSpeed = crouchSpeed; 
+                keepMomentum = false;
+                speed = crouchSpeed; }
         }
         // sprint te ise
        else  if (isGrounded&& UnityEngine.Input.GetKey(sprintKey)&& verticalınput >=0 )
         {
             state = MovementState.sprinting;
+            keepMomentum = true;     
             desiredMoveSpeed = sprintspeed;
+            speedChangeFactor = 4f;
         }
         // Walking state de ise
         else if (isGrounded)
         {
+            if (speed > walkSpeed)
+                keepMomentum = true;
             state = MovementState.walking;
             desiredMoveSpeed = walkSpeed;
         }
@@ -280,15 +295,9 @@ bool ReadyToJump;
         else
         {
             state = MovementState.air;
-            if (desiredMoveSpeed < sprintspeed)
-            {
-                desiredMoveSpeed = walkSpeed;
-                
-            }
-            else
-            {
-                desiredMoveSpeed = sprintspeed;
-            }
+            keepMomentum = true;
+            desiredMoveSpeed = Mathf.Max(desiredMoveSpeed, sprintspeed);
+
         }
         bool desiredMoveSpeedHasChanged = desiredMoveSpeed != lastDesiredMoveSpeed;
         if (lastState == MovementState.dashing)
@@ -363,6 +372,22 @@ bool ReadyToJump;
             return;
         }
         movement = oriantation.forward * verticalınput + oriantation.right * horizontalınput;
+        Vector3 rawMove = movement.normalized;
+        if (rawMove != Vector3.zero)
+        {
+            if (Physics.Raycast(transform.position, rawMove, out wallHit, wallCheckDistance, whatIsWall))
+            {
+                Vector3 normal = wallHit.normal;
+                float dot = Vector3.Dot(rawMove, -normal);
+                if (dot > 0.1f)
+                {
+                    movement = Vector3.ProjectOnPlane(movement, normal);
+                    rb.linearVelocity = Vector3.ProjectOnPlane(rb.linearVelocity, normal);
+                }
+            }
+        }
+        
+        
         if (OnSlope()&& !exitingSlope)
         {
             rb.AddForce(GetSlopeMoveDirection(movement)*speed*20f, ForceMode.Force);
@@ -476,6 +501,10 @@ public  bool OnSlope()
         Vector3 velocityXZ = displacementXZ / totalTime;
 
         return velocityXZ + velocityY;
+    }
+    private void ShowSpeed() 
+    { float currentSpeed = new Vector3(rb.linearVelocity.x, 0, rb.linearVelocity.z).magnitude; 
+        speedText.text = "Speed: " + currentSpeed.ToString("0.0"); 
     }
 
 }
