@@ -154,7 +154,7 @@ MonoBehaviour:
   wallrunning: 0
   whatIsWall:
     serializedVersion: 2
-    m_Bits: 128
+    m_Bits: 1152
   whatIsGround:
     serializedVersion: 2
     m_Bits: 64
@@ -489,6 +489,6 @@ CapsuleCollider:
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.4
-  m_Height: 2
+  m_Height: 1.8
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}

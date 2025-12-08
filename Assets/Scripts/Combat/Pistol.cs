@@ -2,6 +2,8 @@ using TMPro;
 using System;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Rendering.UI;
+using UnityEngine.VFX;
 
 
 public class Pistol : MonoBehaviour
@@ -15,6 +17,9 @@ public class Pistol : MonoBehaviour
     public int totalAmmo = 48; 
     public float reloadTime = 1.3f;
     public int maxAmmo = 48;
+    
+    [Header("Muzzle Flash")]
+    public VisualEffect muzzleFlashVFX;
     
     [Header("Reload UI")]
     public  UnityEngine.UI.Slider reloadSlider;
@@ -58,7 +63,8 @@ public class Pistol : MonoBehaviour
         {
             if (currentAmmo <= 0)
             {
-                Debug.Log("Şarjör boş!");
+                if (!isReloading && totalAmmo > 0)
+                    StartCoroutine(Reload());
                 return;
             }
 
@@ -119,6 +125,11 @@ public class Pistol : MonoBehaviour
 
         if (recoil != null)
             recoil.Fire();
+        if (muzzleFlashVFX != null)
+        {
+            muzzleFlashVFX.Play();
+        }
+      
 
         RaycastHit hit;
 
