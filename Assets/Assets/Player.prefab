@@ -103,12 +103,12 @@ MonoBehaviour:
   jump: 32
   sprintKey: 304
   crouchKey: 99
-  ceilingCheckDistance: 1
+  ceilingCheckDistance: 2
   whatIsCeiling:
     serializedVersion: 2
-    m_Bits: 128
+    m_Bits: 512
   oriantation: {fileID: 6211486474594695480}
-  state: 0
+  state: 4
   activeGrapple: 0
   freeze: 0
   swinging: 0

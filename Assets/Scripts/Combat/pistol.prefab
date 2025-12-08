@@ -106,7 +106,11 @@ MonoBehaviour:
   magazineSize: 12
   totalAmmo: 48
   reloadTime: 1.3
-  bloodEffect: {fileID: 0}
+  maxAmmo: 48
+  reloadSlider: {fileID: 0}
+  normalBloodEffect: {fileID: 0}
+  headshotBloodEffect: {fileID: 0}
+  isReloading: 0
   recoil: {fileID: 6655237270929612233}
   ammoText: {fileID: 0}
 --- !u!114 &6655237270929612233
@@ -121,5 +125,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4706d58ef8ab78d4084ebc65a81e23ab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  recoilAmount: 0.1
+  recoilAmount: 0.3
   recoilSpeed: 10
