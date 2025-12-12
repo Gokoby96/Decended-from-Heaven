@@ -24,11 +24,7 @@ public class Swing : MonoBehaviour
     public float forwardThrustForce;
     public float extendCableSpeed;
     
-    [Header("Rope Animation Settings")]
-    public int ropeSegments = 20;          
-    public float waveAmplitude = 0.2f;    
-    public float waveFrequency = 2f;      
-    public float waveSpeed = 4f;  
+    
     
     
     
@@ -59,6 +55,7 @@ public class Swing : MonoBehaviour
 
     void StartSwing()
     {
+        
         pm.swinging = true;
         RaycastHit hit;
         if (Physics.Raycast(cam.position,cam.forward,out hit,maxSwingDistance, whatIsGrappleable))
@@ -81,6 +78,7 @@ public class Swing : MonoBehaviour
             currentGrapplePosition = gunTip.position;
             GetComponent<Grapling>().StopGrapple();
             pm.swinging = true;
+            
 
         }
         else

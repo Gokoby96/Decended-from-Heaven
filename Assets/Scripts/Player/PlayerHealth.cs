@@ -37,10 +37,7 @@ public class PlayerHealth : MonoBehaviour
             yellowSlider.value = redSlider.value; 
         }
 
-        if (Input.GetKeyDown(KeyCode.H))
-        {
-            TakeDamage(20);
-        }
+    
     }
 
     public void TakeDamage(float amount)
@@ -78,6 +75,10 @@ public class PlayerHealth : MonoBehaviour
     void Die()
     {
         Debug.Log("Player Dead!");
+        PlayerMovement pm = GetComponent<PlayerMovement>();
+        if (pm != null)
+            pm.enabled = false;
+        Time.timeScale = 0f;
         
     }
 }

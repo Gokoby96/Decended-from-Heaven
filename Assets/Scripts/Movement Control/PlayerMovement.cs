@@ -25,6 +25,7 @@ public class PlayerMovement : MonoBehaviour
     private float lastDesiredMoveSpeed;
     private MovementState lastState;
     private bool keepMomentum;
+   
     public TextMeshProUGUI speedText;
 
     [Header("Wall Check")]
@@ -262,6 +263,7 @@ bool ReadyToJump;
         {
             state = MovementState.swinging;
             desiredMoveSpeed = swingSpeed;
+            
         }
         //crouching state inde ise
         else if (UnityEngine.Input.GetKey(crouchKey))
@@ -362,6 +364,7 @@ bool ReadyToJump;
     
     private void MovePlayer()
     {
+      
         if (activeGrapple)
         {
             return;

@@ -15,6 +15,7 @@ public class Grapling : MonoBehaviour
    public float grappleDelayTime;
    private Vector3 grapplePoint;
    public float overshootYAxis;
+  
 
    [Header("Cooldown")] 
    public float grapplingCD;
@@ -115,8 +116,7 @@ public class Grapling : MonoBehaviour
       grappling = false;
       pm.activeGrapple = false; 
       grapplingCDTimer = grapplingCD;
-      
-      
+     
       lr.enabled = false;
    }
 
