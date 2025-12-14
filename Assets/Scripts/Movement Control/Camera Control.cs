@@ -109,6 +109,12 @@ public class CameraControl : MonoBehaviour
             targetFOV = sprintFOV + 5f; // Wallrun FOV (önceden eklediğimiz)
             lerpSpeed = fovLerpSpeed * 2f;
         }
+        else if (!playerMovement.isGrounded && playerMovement.keepMomentum&& !playerMovement.dashing&& !playerMovement.wallrunning && !playerMovement.swinging)
+        {
+            targetFOV = sprintFOV;
+        }
+
+
         else if (playerMovement.state == PlayerMovement.MovementState.dashing)
         {
             targetFOV = dashFOV; // Dash sırasında daha geniş FOV

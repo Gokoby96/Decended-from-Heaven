@@ -150371,15 +150371,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1321908479196458703, guid: 7f0fd1ab5c10cd54c91becf0129a6188, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -14.04
+      value: -15.49
       objectReference: {fileID: 0}
     - target: {fileID: 1321908479196458703, guid: 7f0fd1ab5c10cd54c91becf0129a6188, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 34.496
+      value: 34.56
       objectReference: {fileID: 0}
     - target: {fileID: 1321908479196458703, guid: 7f0fd1ab5c10cd54c91becf0129a6188, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -135.373
+      value: -139.8
       objectReference: {fileID: 0}
     - target: {fileID: 1321908479196458703, guid: 7f0fd1ab5c10cd54c91becf0129a6188, type: 3}
       propertyPath: m_LocalRotation.w
@@ -150422,12 +150422,20 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1676019972}
     - target: {fileID: 5269424802689789069, guid: 7f0fd1ab5c10cd54c91becf0129a6188, type: 3}
+      propertyPath: crouchKey
+      value: 122
+      objectReference: {fileID: 0}
+    - target: {fileID: 5269424802689789069, guid: 7f0fd1ab5c10cd54c91becf0129a6188, type: 3}
       propertyPath: speedText
       value: 
       objectReference: {fileID: 540646784}
     - target: {fileID: 5269424802689789069, guid: 7f0fd1ab5c10cd54c91becf0129a6188, type: 3}
       propertyPath: swingSpeed
-      value: 20
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 5310855329110011681, guid: 7f0fd1ab5c10cd54c91becf0129a6188, type: 3}
+      propertyPath: slideKey
+      value: 99
       objectReference: {fileID: 0}
     - target: {fileID: 8053155119647185303, guid: 7f0fd1ab5c10cd54c91becf0129a6188, type: 3}
       propertyPath: playerCam

@@ -24,7 +24,7 @@ public class PlayerMovement : MonoBehaviour
     private float desiredMoveSpeed;
     private float lastDesiredMoveSpeed;
     private MovementState lastState;
-    private bool keepMomentum;
+    public bool keepMomentum;
    
     public TextMeshProUGUI speedText;
 
@@ -43,7 +43,7 @@ public class PlayerMovement : MonoBehaviour
     [Header("Ground Check")]
     public float playerheight;
     public LayerMask WhatIsGround;
-    bool isGrounded;
+   public bool isGrounded;
     
     [Header("Keybinds")]
     public KeyCode jump = KeyCode.Space;
@@ -242,7 +242,8 @@ bool ReadyToJump;
         {
             state = MovementState.wallRunning;
             desiredMoveSpeed = wallRunSpeed;
-            
+            keepMomentum = true;
+
         }
         // slide state inde 
        else if (sliding)
@@ -258,11 +259,14 @@ bool ReadyToJump;
             {
                 desiredMoveSpeed = sprintspeed;
             }
+
+            keepMomentum = true;
         }
         else if (swinging)
         {
             state = MovementState.swinging;
             desiredMoveSpeed = swingSpeed;
+           
             
         }
         //crouching state inde ise
@@ -299,6 +303,7 @@ bool ReadyToJump;
             state = MovementState.air;
             keepMomentum = true;
             desiredMoveSpeed = Mathf.Max(desiredMoveSpeed, sprintspeed);
+            
 
         }
         bool desiredMoveSpeedHasChanged = desiredMoveSpeed != lastDesiredMoveSpeed;
