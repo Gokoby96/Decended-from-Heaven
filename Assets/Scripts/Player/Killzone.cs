@@ -1,16 +1,13 @@
 using UnityEngine;
-
+using UnityEngine.SceneManagement;
 public class Killzone : MonoBehaviour
 {
-    public PlayerHealth playerHealth; 
-
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
         {
-            playerHealth.TakeDamage(9999); 
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
     }
 }
-    
 

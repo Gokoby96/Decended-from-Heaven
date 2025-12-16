@@ -1,5 +1,5 @@
 using UnityEngine;
-
+using UnityEngine.SceneManagement;
 
 public class PlayerHealth : MonoBehaviour
 {
@@ -78,7 +78,9 @@ public class PlayerHealth : MonoBehaviour
         PlayerMovement pm = GetComponent<PlayerMovement>();
         if (pm != null)
             pm.enabled = false;
-        Time.timeScale = 0f;
+        
+        Time.timeScale = 1f; 
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         
     }
 }

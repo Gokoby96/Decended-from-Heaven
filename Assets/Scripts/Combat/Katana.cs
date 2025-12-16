@@ -20,7 +20,7 @@ public class Katana : MonoBehaviour
 
         void Update()
         {
-            if (Input.GetButtonDown("Fire1") && Time.time >= nextAttackTime)
+            if (Input.GetKeyDown(KeyCode.Mouse0) && Time.time >= nextAttackTime)
             {
                 nextAttackTime = Time.time + attackRate;
                 slash.PlaySlash();

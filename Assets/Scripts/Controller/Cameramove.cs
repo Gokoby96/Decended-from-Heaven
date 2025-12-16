@@ -6,6 +6,6 @@ public class Cameramove : MonoBehaviour
 
     private void Update()
     {
-        transform.position = cameraTransform.position;
+        transform.position = cameraTransform.position ;
     }
 }
