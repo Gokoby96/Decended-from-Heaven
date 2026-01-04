@@ -15,6 +15,7 @@ public class Grapling : MonoBehaviour
    public float grappleDelayTime;
    private Vector3 grapplePoint;
    public float overshootYAxis;
+   
   
 
    [Header("Cooldown")] 
@@ -29,7 +30,7 @@ public class Grapling : MonoBehaviour
 
    private void Start()
    {
-     
+      InvokeRepeating(nameof(ScareFishAlongLine), 0.1f, 0.1f);
    }
 
    private void Update()
@@ -120,7 +121,28 @@ public class Grapling : MonoBehaviour
       lr.enabled = false;
    }
 
+   private void ScareFishAlongLine()
+   {
+      if (!grappling) return;
 
+      // gunTip ve grapplePoint arasındaki hattı kontrol et
+      // CapsuleCast kullanarak ipin etrafındaki silindirik alanı tarıyoruz
+      float detectionRadius = 2f; // İpin ne kadar uzağındaki balıklar kaçsın?
+    
+      RaycastHit[] hits = Physics.SphereCastAll(gunTip.position, detectionRadius, (grapplePoint - gunTip.position).normalized, Vector3.Distance(gunTip.position, grapplePoint));
+
+      foreach (var hit in hits)
+      {
+         if (hit.collider.CompareTag("Fish")) // Balıklara "Fish" tagı vermeyi unutma
+         {
+            Fish fish = hit.collider.GetComponent<Fish>();
+            if (fish != null)
+            {
+               fish.Scare(hit.point); // Balığı ürküt
+            }
+         }
+      }
+   }
 
 
 

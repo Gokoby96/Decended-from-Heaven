@@ -65,4 +65,19 @@ public class Fish : MonoBehaviour
                                (targetPosition - manager.transform.position).normalized * manager.swimRadius;
           }
       }
+      
+      public void Scare(Vector3 scareSource)
+      {
+          // Kaçış yönünü hesapla (kaynaktan dışarı doğru)
+          Vector3 escapeDirection = (transform.position - scareSource).normalized;
+    
+          // Geçici olarak yeni bir hedef belirle (uzağa)
+          targetPosition = transform.position + escapeDirection * 10f;
+    
+          // Balığı hızlandır (isteğe bağlı)
+          speed *= 1.5f; 
+          Invoke(nameof(ResetSpeed), 2f); // 2 saniye sonra yavaşla
+      }
+
+      void ResetSpeed() => speed = 2f;
 }

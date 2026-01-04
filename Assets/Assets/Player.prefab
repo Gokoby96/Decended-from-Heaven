@@ -105,7 +105,7 @@ MonoBehaviour:
   isGrounded: 0
   jump: 32
   sprintKey: 304
-  crouchKey: 122
+  crouchKey: 99
   ceilingCheckDistance: 2
   whatIsCeiling:
     serializedVersion: 2
@@ -138,10 +138,10 @@ MonoBehaviour:
   orientation: {fileID: 6211486474594695480}
   playerobj: {fileID: 7604132458649392834}
   maxSlideTime: 0.75
-  slideBoostForce: 5
+  slideBoostForce: 1
   frictionCompensation: 0.5
   slideYscale: 0.5
-  slideKey: 99
+  slideKey: 306
 --- !u!114 &7996094627015888293
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -188,7 +188,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   orientation: {fileID: 6211486474594695480}
   playerCam: {fileID: 0}
-  dashForce: 50
+  dashForce: 25
   dashUpwardForce: 0
   maxDashYSpeed: 15
   dashDuration: 0.25
@@ -1255,7 +1255,7 @@ ParticleSystem:
     rateOverTime:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 30
+      scalar: 80
       minScalar: 10
       maxCurve:
         serializedVersion: 2

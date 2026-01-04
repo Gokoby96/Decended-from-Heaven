@@ -11,10 +11,9 @@ GameObject:
   - component: {fileID: 4131675517322482100}
   - component: {fileID: 6393805231238906471}
   - component: {fileID: 8005930781989116167}
-  - component: {fileID: 447403263654805758}
   - component: {fileID: 6980636322023310597}
-  - component: {fileID: 6164318186198687173}
-  - component: {fileID: 2001556372409876794}
+  - component: {fileID: 5974830249169702041}
+  - component: {fileID: 874810085241078597}
   m_Layer: 0
   m_Name: HealBox
   m_TagString: Untagged
@@ -30,13 +29,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5237736666984719838}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: 0.41317588, y: 0.4924039, z: 0.4924039, w: 0.5868242}
   m_LocalPosition: {x: -4.5118303, y: 0.9383399, z: 3.1969495}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 50, y: 50, z: 50}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 80, z: 80}
 --- !u!33 &6393805231238906471
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -44,7 +43,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5237736666984719838}
-  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+  m_Mesh: {fileID: -2124705421725058983, guid: faa0c6bbbbd930043bab7e0a0da12c7f, type: 3}
 --- !u!23 &8005930781989116167
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -90,7 +89,38 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &447403263654805758
+--- !u!114 &6980636322023310597
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5237736666984719838}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b8cc5b64c731e2c47891955488e9d8a3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  healFlash: {fileID: 0}
+  HealthPlayer:
+  - {fileID: 0}
+  HealAmount: 15
+  healEffectPrefab: {fileID: 0}
+--- !u!114 &5974830249169702041
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5237736666984719838}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bb8c6260fa7fa464ea54a68450e0a44f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  amplitude: 0.2
+  frequency: 1
+--- !u!65 &874810085241078597
 BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -109,49 +139,5 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &6980636322023310597
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5237736666984719838}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b8cc5b64c731e2c47891955488e9d8a3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  healFlash: {fileID: 0}
-  HealthPlayer:
-  - {fileID: 0}
-  HealAmount: 15
-  healEffectPrefab: {fileID: 0}
---- !u!114 &6164318186198687173
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5237736666984719838}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bb8c6260fa7fa464ea54a68450e0a44f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  amplitude: 0.2
-  frequency: 1
---- !u!114 &2001556372409876794
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5237736666984719838}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ca727e39f73174d4492baefa0d833769, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  rotationSpeed: 50
+  m_Size: {x: 0.029345568, y: 0.019396927, z: 0.0063009188}
+  m_Center: {x: 0.0048247045, y: 0.000301537, z: -4.0440157e-10}

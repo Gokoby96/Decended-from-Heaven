@@ -134,13 +134,13 @@ bool ReadyToJump;
         
        
        
-        if (state == MovementState.walking || state == MovementState.sprinting || state == MovementState.crouching && !activeGrapple)
+        if (!dashing && !activeGrapple && (isGrounded || state == MovementState.walking || state == MovementState.sprinting))
         {
             rb.linearDamping = groundDrag;
         }
         else
         {
-            rb.linearDamping = 0;
+            rb.linearDamping = 0; // Dash, Havada olma veya Grapple durumunda sürtünmeyi kapat
         }
     }
 
@@ -198,6 +198,9 @@ bool ReadyToJump;
     public void JumpToPosition(Vector3 targetPosition, float trajectoryHeight)
     {
         activeGrapple = true;
+        rb.linearVelocity = new Vector3(0f,rb.linearVelocity.y,0f);
+
+        
         velocitySet= CalculateJumpVelocity(transform.position, targetPosition, trajectoryHeight);
     Invoke(nameof(SetVelocity), 0.1f);
       
@@ -234,6 +237,8 @@ bool ReadyToJump;
             state = MovementState.dashing;
             desiredMoveSpeed = dashSpeed;
             speedChangeFactor = dashSpeedChangeFactor;
+            
+            rb.useGravity = false;
             
         }
         
@@ -418,6 +423,10 @@ bool ReadyToJump;
 
     private void SpeedControl()
     {
+        if (state == MovementState.dashing)
+        {
+            return;
+        }
         if (activeGrapple)
         {
             return;

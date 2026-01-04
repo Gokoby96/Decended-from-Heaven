@@ -41,6 +41,10 @@ public class Swing : MonoBehaviour
         {
             StopSwing();
         }
+        if (pm.isGrounded && joint != null)
+        {
+            StopSwing();
+        }
 
         if (joint !=null)
         {

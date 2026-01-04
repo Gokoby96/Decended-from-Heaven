@@ -52,7 +52,10 @@ public class Dashing : MonoBehaviour
         else dashCdTimer = dashCd;
 
         pm.dashing = true;
-        pm.maxYSpeed = maxDashYSpeed;
+        rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
+        
+        if (disableGravity)
+            rb.useGravity = false; 
         
 
        
@@ -88,11 +91,13 @@ public class Dashing : MonoBehaviour
 
     private void ResetDash()
     {
+        StartCoroutine(DashEndBuffer());
+    }
+    private IEnumerator DashEndBuffer()
+    {
+        yield return new WaitForSeconds(0.1f); // Çok kısa bir bekleme
         pm.dashing = false;
         pm.maxYSpeed = 0;
-        
-
-        
 
         if (disableGravity)
             rb.useGravity = true;

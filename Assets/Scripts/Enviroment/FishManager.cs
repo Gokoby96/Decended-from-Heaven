@@ -23,4 +23,9 @@ public class FishManager : MonoBehaviour
                  fishScript.manager = this;
              }
          }
+         void OnDrawGizmosSelected()
+         {
+             Gizmos.color = Color.cyan;
+             Gizmos.DrawWireSphere(transform.position, swimRadius);
+         }
 }
