@@ -2,44 +2,53 @@ using UnityEngine;
 
 public class Katana : MonoBehaviour
 {
-  
-        public float damage;
-        public float attackRange;
-        public float attackRate;
-        private Camera fpsCam; 
-        private KatanaSlash slash;
+    public float damage;
+    public float attackRange;
+    public float attackRate;
+    
+    private Camera fpsCam; 
+    private KatanaSlash slash;
+    private float nextAttackTime = 0f;
+    
+    private void Start()
+    {
+        slash = GetComponent<KatanaSlash>();
+        if (fpsCam == null)
+            fpsCam = Camera.main;
+    }
 
-        private float nextAttackTime = 0f;
-        
-        private void Start()
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Mouse0) && Time.time >= nextAttackTime)
         {
-            slash = GetComponent<KatanaSlash>();
-            if (fpsCam == null)
-                fpsCam = Camera.main;
+            nextAttackTime = Time.time + attackRate;
+            slash.PlaySlash();
+            Attack();
         }
+    }
 
-        void Update()
+    void Attack()
+    {
+        RaycastHit hit;
+        if (Physics.Raycast(fpsCam.transform.position, fpsCam.transform.forward, out hit, attackRange))
         {
-            if (Input.GetKeyDown(KeyCode.Mouse0) && Time.time >= nextAttackTime)
-            {
-                nextAttackTime = Time.time + attackRate;
-                slash.PlaySlash();
-                Attack();
-            }
-        }
+            EnemyHealth enemy = hit.transform.GetComponentInParent<EnemyHealth>();
 
-        void Attack()
-        {
-            RaycastHit hit;
-            if (Physics.Raycast(fpsCam.transform.position, fpsCam.transform.forward, out hit, attackRange))
+            if (enemy != null)
             {
-                EnemyHealth enemy = hit.transform.GetComponent<EnemyHealth>();
-                if (enemy != null)
-                    enemy.TakeDamage(damage);
-                
+                float appliedDamage = damage;
+
+                // Headshot kontrolü
+                if (hit.collider.CompareTag("Head"))
+                {
+                    appliedDamage = enemy.maxHealth; // Tek vuruş
+                    Debug.Log("KATANA HEADSHOT!");
+                }
+
+                enemy.TakeDamage(appliedDamage);
 
                 Debug.DrawRay(fpsCam.transform.position, fpsCam.transform.forward * attackRange, Color.green, 0.5f);
             }
-            
         }
+    }
 }

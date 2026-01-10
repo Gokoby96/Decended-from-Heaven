@@ -26,8 +26,8 @@ Transform:
   m_GameObject: {fileID: 1009486616827295408}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.277, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 0, y: 0.4, z: 0}
+  m_LocalScale: {x: 0.5, y: 0.7, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4426758982971738308}
@@ -64,7 +64,6 @@ GameObject:
   - component: {fileID: 4426758982971738308}
   - component: {fileID: 8482984011659679458}
   - component: {fileID: 5724039692493333508}
-  - component: {fileID: 6820117157386067291}
   - component: {fileID: 4443763073723401293}
   - component: {fileID: 4827683957091523642}
   - component: {fileID: 8129147554677489818}
@@ -146,28 +145,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &6820117157386067291
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7519448544953727198}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!114 &4443763073723401293
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -227,7 +204,7 @@ MonoBehaviour:
   viewDistance: 30
   obstacleMask:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 512
   attackRange: 2
   attackCooldown: 1.5
   damage: 10
@@ -296,9 +273,9 @@ Light:
   m_Enabled: 1
   serializedVersion: 11
   m_Type: 2
-  m_Color: {r: 0.08454966, g: 0.57644093, b: 0.7169812, a: 1}
-  m_Intensity: 0.3
-  m_Range: 2
+  m_Color: {r: 0.59289443, g: 0.030526895, b: 0.9245283, a: 1}
+  m_Intensity: 0.5
+  m_Range: 5
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
   m_CookieSize: 10
